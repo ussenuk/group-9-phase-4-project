@@ -1,0 +1,52 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: transparent;
+    background-color: aliceblue;
+  }
+  
+  .school-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+  }
+  
+  .school-img {
+    width: 800px;
+    height:350px;
+    transition: transform 0.3s ease;
+  }
+  
+  .title {
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      font-size: 20px;
+      text-align: center;
+  }
+  
+  .content {
+    margin-bottom: 20px;
+  }
+  
+  /* .programs-list {
+      
+    } */
+  
+  .programs-list li {
+    margin-bottom: 10px;
+    font-style: italic;
+  }
+  
+  
+  .finally span {
+    margin-bottom: 10px;
+  }
+  .our{
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      color: black;
+  }
