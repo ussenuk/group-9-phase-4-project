@@ -7,12 +7,20 @@ import Layout from './Layout.jsx'
 import Home from './components/Home/Home.jsx'
 import About from './components/About/About.jsx'
 import Github, {githubInfoLoader} from './components/Github/Github.jsx'
+import Registration from './components/Registration.jsx'
+import News from './components/News.jsx';
+import StudentRegistration from './components/StudentRegistration.jsx';
+
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<Layout />}>
       <Route path='' element={<Home />}/>
       <Route path='about' element={<About />} />
+      <Route path="inscription" element={<Registration />} />
+      <Route path="news" element={<News />} />
+      <Route path="StudentRegistration" element={<StudentRegistration />} />
       <Route 
       loader={githubInfoLoader}
       path='github' 

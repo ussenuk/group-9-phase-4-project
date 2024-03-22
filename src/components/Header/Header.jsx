@@ -35,7 +35,7 @@ export default function Header() {
                         <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
                             <li>
                                 <NavLink
-                                to="/"
+                                    to="/"
                                     className={({isActive}) =>
                                         `block py-2 pr-4 pl-3 duration-200 border-b border-gray-100 
                                         ${isActive ? "text-orange-500" : "text-black-700" } lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
@@ -46,7 +46,7 @@ export default function Header() {
                             </li>
                             <li>
                                 <NavLink
-                                to="/about"
+                                    to="/about"
                                     className={({isActive}) =>
                                         `block py-2 pr-4 pl-3 duration-200 border-b border-gray-100 
                                         ${isActive ? "text-orange-500" : "text-gray-700" } 
@@ -57,9 +57,9 @@ export default function Header() {
                                 ABOUT    
                                 </NavLink>
                             </li>
-                            <li>
+                            <li className="relative group">
                                 <NavLink
-                                to="/inscription"
+                                    to="/inscription"
                                     className={({isActive}) =>
                                         `block py-2 pr-4 pl-3 duration-200 border-b border-gray-100 
                                         ${isActive ? "text-orange-500" : "text-gray-700" } 
@@ -69,10 +69,24 @@ export default function Header() {
                                 >
                                 REGISTRATION    
                                 </NavLink>
+                                <div className="opacity-0 group-hover:opacity-100 absolute left-0 top-full bg-white pt-2 mt-2 w-48 rounded-lg shadow-lg">
+                                    <NavLink
+                                        to="/news"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    >
+                                        News
+                                    </NavLink>
+                                    <NavLink
+                                        to="/StudentRegistration"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    >
+                                        student registration
+                                    </NavLink>
+                                </div>
                             </li>
                             <li>
                                 <NavLink
-                                to="/ecole"
+                                    to="/ecole"
                                     className={({isActive}) =>
                                         `block py-2 pr-4 pl-3 duration-200 border-b border-gray-100 
                                         ${isActive ? "text-orange-500" : "text-gray-700" } 
@@ -85,7 +99,7 @@ export default function Header() {
                             </li>
                             <li>
                                 <NavLink
-                                to="/job"
+                                    to="/job"
                                     className={({isActive}) =>
                                         `block py-2 pr-4 pl-3 duration-200 border-b border-gray-100 
                                         ${isActive ? "text-orange-500" : "text-gray-700" } 
@@ -98,7 +112,7 @@ export default function Header() {
                             </li>
                             <li>
                                 <NavLink
-                                to="/contact"
+                                    to="/contact"
                                     className={({isActive}) =>
                                         `block py-2 pr-4 pl-3 duration-200 border-b border-gray-100 
                                         ${isActive ? "text-orange-500" : "text-gray-700" } 
@@ -111,7 +125,6 @@ export default function Header() {
                                 CONTACT US
                                 </NavLink>
                             </li>
-                            
                         </ul>
                     </div>
                 </div>
