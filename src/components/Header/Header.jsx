@@ -82,7 +82,6 @@ export default function Header() {
                 </NavLink>
               </li>
               <li>
-          
                 <div
                   className="relative dropdown"
                   onMouseEnter={() => toggleDropdown()}
@@ -119,7 +118,6 @@ export default function Header() {
                 </div>
               </li>
               <li>
-                
                 <div
                   className="relative dropdown"
                   onMouseEnter={() => toggleDropdown()}
