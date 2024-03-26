@@ -84,7 +84,7 @@ with app.app_context():
         if user.role == 'student':
             accounting = Accounting(
                 student_id=user.id,  # Foreign key to Users table
-                account_name=user.fullname + "'s Account",
+                account_name=user.fullname,
                 accounting_status_perterm=rc(['paid', 'pending', 'overdue']),
                 amount_paid=randint(1000, 5000),
                 balance=randint(0, 1000)
@@ -130,7 +130,7 @@ with app.app_context():
             for _ in range(randint(1,3)): # assuming 1 to 3 salary records per teacher for demonstration
                 salary = Salary(
                     user_id=user.id,
-                    amount=round(uniform(150.00, 300.00), 2), # Random salary amount between 150 and 300
+                    amount_usd=round(uniform(150.00, 300.00), 2), # Random salary amount between 150 and 300
                     pay_date=fake.date_between(start_date="-1y", end_date="today"), # Random date in the last 1 years
                     description=fake.sentence(nb_words=6) # A simple description 
 

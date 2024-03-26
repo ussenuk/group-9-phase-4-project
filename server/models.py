@@ -121,7 +121,7 @@ class Salary(db.Model, SerializerMixin):
     __tablename__ = 'salaries'
 
     id = db.Column(db.Integer, primary_key=True)
-    amount = db.Column(db.Numeric(10,2)) # Assuming salary amounts will have two decimal places
+    amount_usd = db.Column(db.Numeric(10,2)) # Assuming salary amounts will have two decimal places
     pay_date = db.Column(db.Date) # The date the salary was paid
     description = db.Column(db.String(255)) # Optional: For bonuses, adjustments,etc.
 
