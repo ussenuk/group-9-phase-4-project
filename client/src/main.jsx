@@ -17,12 +17,18 @@ import Highschool from "./components/HSCHOOL/secondary.jsx";
 import DonationPage from "./components/donate/donate.jsx";
 import ScholarshipPage from "./components/scholarship/scholarship.jsx";
 import AdmissionPage from "./components/admissions/admissions.jsx";
+import Registration from './components/Registration/Registration.jsx'
+import News from './components/Registration/News.jsx';
+import StudentRegistration from './components/Registration/StudentRegistration.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
       <Route path="" element={<Home />} />
       <Route path="about" element={<About />} />
+      <Route path="inscription" element={<StudentRegistration />} />
+      <Route path="news" element={<News />} />
+      <Route path="StudentRegistration" element={<StudentRegistration />} />
       <Route loader={githubInfoLoader} path="github" element={<Github />} />
       <Route path="*" element={<div>Not Found</div>} />
       <Route path="school" element={<School />} />

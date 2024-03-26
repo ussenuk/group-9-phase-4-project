@@ -64,7 +64,7 @@ export default function Header() {
                   ABOUT
                 </NavLink>
               </li>
-              <li>
+              <li className="relative group">
                 <NavLink
                   to="/inscription"
                   className={({ isActive }) =>
@@ -80,7 +80,23 @@ export default function Header() {
                 >
                   REGISTRATION
                 </NavLink>
-              </li>
+                <div className="opacity-0 group-hover:opacity-100 absolute left-0 top-full bg-white pt-2 mt-2 w-48 rounded-lg shadow-lg">
+                                    
+                                    <NavLink
+                                        to="/StudentRegistration"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    >
+                                        Online Student Registration
+                                    </NavLink>
+                                    <NavLink
+                                        to="/news"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    >
+                                        News Related to Our School
+                                    </NavLink>
+                  </div>
+
+                </li>
               <li>
           
                 <div
