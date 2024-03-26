@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { ResetPassword } from "./ResetPassword";
 
 export const LoginForm = () => {
   const [users, setUsers] = useState([]);
@@ -51,49 +53,76 @@ export const LoginForm = () => {
   });
 
   return (
-    <div>
-      <form onSubmit={formik.handleSubmit} style={{ margin: "30px" }}>
-        <label htmlFor="email">Email Address</label>
-        <br />
-        <input
-          id="email"
-          name="email"
-          type="email"
-          onChange={formik.handleChange}
-          value={formik.values.email}
-        />
-        <p style={{ color: "red " }}>{formik.errors.email}</p>
+    <Router>
+      <div>
+        <Switch>
+          <Route path="/reset-password">
+            <ResetPassword />
+          </Route>
+          <Route path="/">
+            <form onSubmit={formik.handleSubmit} style={{ margin: "30px" }}>
+              <label htmlFor="email">Email Address</label>
+              <br />
+              <input
+                id="email"
+                name="email"
+                type="email"
+                onChange={formik.handleChange}
+                value={formik.values.email}
+              />
+              <p style={{ color: "red " }}>{formik.errors.email}</p>
 
-        <label htmlFor="password">Password</label>
-        <br />
-        <input
-          id="password"
-          name="password"
-          type="password"
-          onChange={formik.handleChange}
-          value={formik.values.password}
-        />
-        <p style={{ color: "red " }}>{formik.errors.password}</p>
+              <label htmlFor="password">Password</label>
+              <br />
+              <input
+                id="password"
+                name="password"
+                type="password"
+                onChange={formik.handleChange}
+                value={formik.values.password}
+              />
+              <p style={{ color: "red " }}>{formik.errors.password}</p>
 
-        <button type="submit">Login</button>
-      </form>
+              <button type="submit">Login</button>
 
-      <table style={{ padding: "15px" }}>
-        <tbody>
-          <tr>
-            <th>Email</th>
-          </tr>
-          {users === "undefined" ? (
-            <p>Loading</p>
-          ) : (
-            users.map((user, i) => (
-              <tr key={i}>
-                <td>{user.emali}</td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
-    </div>
+              <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+                <label>
+                  <input type="checkbox" name="rememberMe" />
+                  Remember me?
+                </label>
+              </div>
+
+              <div style={{ marginBottom: "10px" }}>
+                <Link to="/reset-password">Forgot Password?</Link>
+              </div>
+            </form>
+
+            <div>
+              <p>
+                Don't have an account?{" "}
+                <a href="Link to registration form">Sign up</a>
+              </p>
+            </div>
+
+            <table style={{ padding: "15px" }}>
+              <tbody>
+                <tr>
+                  <th>Email</th>
+                </tr>
+                {users === "undefined" ? (
+                  <p>Loading</p>
+                ) : (
+                  users.map((user, i) => (
+                    <tr key={i}>
+                      <td>{user.emali}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 };
