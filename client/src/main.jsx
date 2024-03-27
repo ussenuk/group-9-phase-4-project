@@ -8,6 +8,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
+
 import Layout from "./Layout.jsx";
 import Home from "./components/Home/Home.jsx";
 import About from "./components/About/About.jsx";
@@ -17,6 +18,8 @@ import Highschool from "./components/HSCHOOL/secondary.jsx";
 import DonationPage from "./components/donate/donate.jsx";
 import ScholarshipPage from "./components/scholarship/scholarship.jsx";
 import AdmissionPage from "./components/admissions/admissions.jsx";
+import LoginForm from "./components/Login/Login.jsx";
+import JobsComponent from "./components/Jobs/JobsList.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -30,6 +33,8 @@ const router = createBrowserRouter(
       <Route path="donate" element={<DonationPage />} />
       <Route path="scholarship" element={<ScholarshipPage />} />
       <Route path="admissions" element={<AdmissionPage />} />
+      <Route path="login" element={<LoginForm />} />
+      <Route path="job" element={<JobsComponent />} />
     </Route>
   )
 );

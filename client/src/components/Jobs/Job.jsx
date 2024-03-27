@@ -3,9 +3,11 @@ import React from 'react';
 const Job = ({ job }) => {
   return (
     <div className="job">
-      <h3>{job.title}</h3>
+      <li>
+      <h3> <strong>Job Title :</strong> {job.title}</h3>
       <p><strong>Location:</strong> {job.location}</p>
-      <p>{job.description}</p>
+      <p><strong>Job Description:</strong>{job.description}</p>
+      </li>
     </div>
   );
 }
