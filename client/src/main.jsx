@@ -17,9 +17,9 @@ import Highschool from "./components/HSCHOOL/secondary.jsx";
 import DonationPage from "./components/donate/donate.jsx";
 import ScholarshipPage from "./components/scholarship/scholarship.jsx";
 import AdmissionPage from "./components/admissions/admissions.jsx";
-import Registration from './components/Registration/Registration.jsx'
 import News from './components/Registration/News.jsx';
 import StudentRegistration from './components/Registration/StudentRegistration.jsx';
+import Dashboard from './components/Dashboard/Dashboard.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -36,6 +36,7 @@ const router = createBrowserRouter(
       <Route path="donate" element={<DonationPage />} />
       <Route path="scholarship" element={<ScholarshipPage />} />
       <Route path="admissions" element={<AdmissionPage />} />
+      <Route path="dashboard" element={<Dashboard />} />
     </Route>
   )
 );
