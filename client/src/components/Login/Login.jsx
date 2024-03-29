@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { ResetPassword } from "./ResetPassword";
+import { Link } from "react-router-dom";
+import "./Login.css";
 
-export const LoginForm = () => {
+export default function LoginForm() {
   const [users, setUsers] = useState([]);
   const [refreshPage, setRefreshPage] = useState(false);
   // Pass the useFormik() hook initial form values and a submit function that will
@@ -14,9 +14,9 @@ export const LoginForm = () => {
     console.log("FETCH!");
     fetch("/users")
       .then((res) => res.json())
-      .then((data) => {
-        setUsers(data);
-        console.log(data);
+      .then((users) => {
+        setUsers(users);
+        console.log(users);
       });
   }, [refreshPage]);
 
@@ -53,76 +53,87 @@ export const LoginForm = () => {
   });
 
   return (
-    <Router>
+    <div className="login-form-container">
+      <h2>
+        <strong>
+          <u>Login Form</u>
+        </strong>
+      </h2>
+      <form onSubmit={formik.handleSubmit} style={{ margin: "30px" }}>
+        <div className="form-group">
+          <label htmlFor="email" className="form-label">
+            Email Address:
+          </label>
+
+          <input
+            id="email"
+            name="email"
+            type="email"
+            onChange={formik.handleChange}
+            value={formik.values.email}
+            className="form-input"
+          />
+          <p className="error-message">{formik.errors.email}</p>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="password" className="form-label">
+            Password:
+          </label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            onChange={formik.handleChange}
+            value={formik.values.password}
+            className="form-input"
+          />
+          <p className="error-message">{formik.errors.password}</p>
+        </div>
+
+        <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+          <label>
+            <input type="checkbox" name="rememberMe" />
+            Remember me?
+          </label>
+        </div>
+
+        <div className="button-group">
+          <button type="submit" className="submit-button">
+            Login
+          </button>
+
+          <div>
+            <Link to="/reset-password" className="forgot-password">
+              Forgot your Password?
+            </Link>
+          </div>
+        </div>
+      </form>
+
       <div>
-        <Switch>
-          <Route path="/reset-password">
-            <ResetPassword />
-          </Route>
-          <Route path="/">
-            <form onSubmit={formik.handleSubmit} style={{ margin: "30px" }}>
-              <label htmlFor="email">Email Address</label>
-              <br />
-              <input
-                id="email"
-                name="email"
-                type="email"
-                onChange={formik.handleChange}
-                value={formik.values.email}
-              />
-              <p style={{ color: "red " }}>{formik.errors.email}</p>
-
-              <label htmlFor="password">Password</label>
-              <br />
-              <input
-                id="password"
-                name="password"
-                type="password"
-                onChange={formik.handleChange}
-                value={formik.values.password}
-              />
-              <p style={{ color: "red " }}>{formik.errors.password}</p>
-
-              <button type="submit">Login</button>
-
-              <div style={{ marginTop: "10px", marginBottom: "10px" }}>
-                <label>
-                  <input type="checkbox" name="rememberMe" />
-                  Remember me?
-                </label>
-              </div>
-
-              <div style={{ marginBottom: "10px" }}>
-                <Link to="/reset-password">Forgot Password?</Link>
-              </div>
-            </form>
-
-            <div>
-              <p>
-                Don't have an account?{" "}
-                <a href="Link to registration form">Sign up</a>
-              </p>
-            </div>
-
-            <table style={{ padding: "15px" }}>
-              <tbody>
-                <tr>
-                  <th>Email</th>
-                </tr>
-                {users === "undefined" ? (
-                  <p>Loading</p>
-                ) : (
-                  users.map((user, i) => (
-                    <tr key={i}>
-                      <td>{user.emali}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </Route>
-        </Switch>
+        <p>
+          Don't have an account?{" "}
+          <a href="Link to registration form">Sign up here..</a>
+        </p>
       </div>
-    </Router>
+
+      {/* <table style={{ padding: "15px" }}>
+        <tbody>
+          <tr>
+            <th>Email</th>
+          </tr>
+          {users === "undefined" ? (
+            <p>Loading</p>
+          ) : (
+            users.map((user, i) => (
+              <tr key={i}>
+                <td>{user.email}</td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table> */}
+    </div>
   );
-};
+}
