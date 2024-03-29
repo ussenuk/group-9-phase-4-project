@@ -80,7 +80,6 @@ export default function LoginForm() {
           <label htmlFor="password" className="form-label">
             Password:
           </label>
-
           <input
             id="password"
             name="password"
