@@ -5,8 +5,9 @@ from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 
 from config import app, db, api
-from models import User, Department, Accounting, UserDepartment
+from models import User, Department, Accounting, UserDepartment, Salary
 
+# Frank
 class Signup(Resource):
     pass
 
@@ -18,6 +19,8 @@ class Login(Resource):
 
 class Logout(Resource):
     pass
+
+
 
 
 api.add_resource(Signup, '/signup', endpoint='signup')

@@ -18,15 +18,15 @@ import Highschool from "./components/HSCHOOL/secondary.jsx";
 import DonationPage from "./components/donate/donate.jsx";
 import ScholarshipPage from "./components/scholarship/scholarship.jsx";
 import AdmissionPage from "./components/admissions/admissions.jsx";
-import LoginForm from "./components/Login/Login.jsx";
-import ResetPassword from "./components/Login/ResetPassword.jsx";
-import JobsComponent from "./components/Jobs/JobsList.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
       <Route path="" element={<Home />} />
       <Route path="about" element={<About />} />
+      <Route path="inscription" element={<StudentRegistration />} />
+      <Route path="news" element={<News />} />
+      <Route path="StudentRegistration" element={<StudentRegistration />} />
       <Route loader={githubInfoLoader} path="github" element={<Github />} />
       <Route path="*" element={<div>Not Found</div>} />
       <Route path="school" element={<School />} />
@@ -34,9 +34,6 @@ const router = createBrowserRouter(
       <Route path="donate" element={<DonationPage />} />
       <Route path="scholarship" element={<ScholarshipPage />} />
       <Route path="admissions" element={<AdmissionPage />} />
-      <Route path="login" element={<LoginForm />} />
-      <Route path="reset-password" element={<ResetPassword />} />
-      <Route path="job" element={<JobsComponent />} />
     </Route>
   )
 );
