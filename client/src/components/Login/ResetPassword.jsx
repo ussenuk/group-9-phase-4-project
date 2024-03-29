@@ -77,7 +77,7 @@ export default function ResetPassword() {
             value={formik.values.confirmPassword}
             className="form-input"
           />
-          <p style={{ color: "red " }}>{formik.errors.confirmPassword}</p>
+          <p className="error-message">{formik.errors.confirmPassword}</p>
         </div>
           <button type="submit" className="reset-password-button">Reset Password</button>
       </form>
