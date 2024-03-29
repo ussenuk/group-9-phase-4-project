@@ -1,9 +1,8 @@
-
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { Link } from "react-router-dom";
-import { ResetPassword } from "./ResetPassword";
+import "./Login.css";
 
 export default function LoginForm() {
   const [users, setUsers] = useState([]);
@@ -15,9 +14,9 @@ export default function LoginForm() {
     console.log("FETCH!");
     fetch("/users")
       .then((res) => res.json())
-      .then((data) => {
-        setUsers(data);
-        console.log(data);
+      .then((users) => {
+        setUsers(users);
+        console.log(users);
       });
   }, [refreshPage]);
 
@@ -54,31 +53,44 @@ export default function LoginForm() {
   });
 
   return (
-    <div>
+    <div className="login-form-container">
+      <h2>
+        <strong>
+          <u>Login Form</u>
+        </strong>
+      </h2>
       <form onSubmit={formik.handleSubmit} style={{ margin: "30px" }}>
-        <label htmlFor="email">Email Address</label>
-        <br />
-        <input
-          id="email"
-          name="email"
-          type="email"
-          onChange={formik.handleChange}
-          value={formik.values.email}
-        />
-        <p style={{ color: "red " }}>{formik.errors.email}</p>
+        <div className="form-group">
+          <label htmlFor="email" className="form-label">
+            Email Address:
+          </label>
 
-        <label htmlFor="password">Password</label>
-        <br />
-        <input
-          id="password"
-          name="password"
-          type="password"
-          onChange={formik.handleChange}
-          value={formik.values.password}
-        />
-        <p style={{ color: "red " }}>{formik.errors.password}</p>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            onChange={formik.handleChange}
+            value={formik.values.email}
+            className="form-input"
+          />
+          <p className="error-message">{formik.errors.email}</p>
+        </div>
 
-        <button type="submit">Login</button>
+        <div className="form-group">
+          <label htmlFor="password" className="form-label">
+            Password:
+          </label>
+
+          <input
+            id="password"
+            name="password"
+            type="password"
+            onChange={formik.handleChange}
+            value={formik.values.password}
+            className="form-input"
+          />
+          <p className="error-message">{formik.errors.password}</p>
+        </div>
 
         <div style={{ marginTop: "10px", marginBottom: "10px" }}>
           <label>
@@ -87,18 +99,27 @@ export default function LoginForm() {
           </label>
         </div>
 
-        <div style={{ marginBottom: "10px" }}>
-          <Link to="/ResetPassword">Forgot Password?</Link>
+        <div className="button-group">
+          <button type="submit" className="submit-button">
+            Login
+          </button>
+
+          <div>
+            <Link to="/reset-password" className="forgot-password">
+              Forgot your Password?
+            </Link>
+          </div>
         </div>
       </form>
 
       <div>
         <p>
-          Don't have an account? <a href="Link to registration form">Sign up</a>
+          Don't have an account?{" "}
+          <a href="Link to registration form">Sign up here..</a>
         </p>
       </div>
 
-      <table style={{ padding: "15px" }}>
+      {/* <table style={{ padding: "15px" }}>
         <tbody>
           <tr>
             <th>Email</th>
@@ -113,7 +134,7 @@ export default function LoginForm() {
             ))
           )}
         </tbody>
-      </table>
+      </table> */}
     </div>
   );
 }

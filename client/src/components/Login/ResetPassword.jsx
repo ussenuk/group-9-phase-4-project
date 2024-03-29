@@ -1,8 +1,9 @@
-import React from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import React, { useState } from "react";
+import "./ResetPassword.css";
 
-export const ResetPassword = () => {
+export default function ResetPassword() {
   const [resetSuccess, setResetSuccess] = useState(false);
   const [resetError, setResetError] = useState(null);
 
@@ -13,7 +14,7 @@ export const ResetPassword = () => {
       .min(6, "New Password must be at least 6 characters"),
     confirmPassword: yup
       .string()
-      .required("Confirm Password is required")
+      .required("Confirm New Password is required")
       .oneOf([yup.ref("newPassword"), null], "Passwords must match"),
   });
 
@@ -47,35 +48,39 @@ export const ResetPassword = () => {
   });
 
   return (
-    <div>
+    <div className="login-form-container">
       <h2>Reset Password</h2>
       {resetSuccess && <p>Password reset successfully!</p>}
       {resetError && <p style={{ color: "red" }}>{resetError}</p>}
       <form onSubmit={formik.handleSubmit} style={{ margin: "30px" }}>
-        <label htmlFor="newPassword">New Password</label>
-        <br />
-        <input
-          id="newPassword"
-          name="newPassword"
-          type="password"
-          onChange={formik.handleChange}
-          value={formik.values.newPassword}
-        />
-        <p style={{ color: "red " }}>{formik.errors.newPassword}</p>
-
-        <label htmlFor="confirmPassword">Confirm Password</label>
-        <br />
-        <input
-          id="confirmPassword"
-          name="confirmPassword"
-          type="password"
-          onChange={formik.handleChange}
-          value={formik.values.confirmPassword}
-        />
-        <p style={{ color: "red " }}>{formik.errors.confirmPassword}</p>
-
-        <button type="submit">Reset Password</button>
+        <div className="form-group">
+          <label htmlFor="newPassword" className="form-label">New Password:</label>
+          
+          <input
+            id="newPassword"
+            name="newPassword"
+            type="password"
+            onChange={formik.handleChange}
+            value={formik.values.newPassword}
+            className="form-input"
+          />
+          <p className="error-message">{formik.errors.newPassword}</p>
+          </div>
+        <div className="form-group">
+          <label htmlFor="confirmPassword" className="form-label">Confirm New Password:</label>
+         
+          <input
+            id="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            onChange={formik.handleChange}
+            value={formik.values.confirmPassword}
+            className="form-input"
+          />
+          <p style={{ color: "red " }}>{formik.errors.confirmPassword}</p>
+        </div>
+          <button type="submit" className="reset-password-button">Reset Password</button>
       </form>
     </div>
   );
-};
+}
