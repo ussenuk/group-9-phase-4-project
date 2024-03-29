@@ -111,10 +111,12 @@ export default function LoginForm() {
         </div>
       </form>
 
-      <div>
+      <div className="button-group">
         <p>
-          Don't have an account?{" "}
-          <a href="Link to registration form">Sign up here..</a>
+          Don't have an account?
+          <Link to="/StudentRegistration">
+            Click here to register..
+          </Link>
         </p>
       </div>
 
