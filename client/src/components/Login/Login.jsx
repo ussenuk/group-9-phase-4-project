@@ -115,7 +115,7 @@ export default function LoginForm() {
         <p>
           Don't have an account?
           <Link to="/StudentRegistration">
-            Click here to register..
+            Click here to register...
           </Link>
         </p>
       </div>
