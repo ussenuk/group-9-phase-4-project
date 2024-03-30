@@ -25,13 +25,11 @@ class Signup(Resource):
 class CheckSession(Resource):
     def get(self):
         if 'user_id' in session and session['user_id'] is not None:
-            user_id = session['user_id']
-            user = User.query.get(user_id)
-
+            # user = db.session.get(User, session['user_id'])
+            user = User.query.filter(User.id==session.get('user_id')).first()
             if user:
-                return jsonify(user.to_dict()), 200
-
-        return jsonify({}), 204
+                return make_response(user.to_dict(), 200)
+        return make_response({'error':'no active session'}, 401)
 
 class Login(Resource):
     def post(self):
