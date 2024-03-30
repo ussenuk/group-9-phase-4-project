@@ -23,6 +23,7 @@ function Login({ setUser }) {
           if (typeof setUser === 'function') {
             setUser(user);
             // Redirect to dashboard after successful login
+            console.log("setUser called");
             navigate("/dashboard");
           }
         });

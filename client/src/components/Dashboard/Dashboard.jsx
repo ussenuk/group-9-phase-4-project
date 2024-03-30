@@ -7,7 +7,11 @@ import './dashboard.css';
 
 const Dashboard = ({user}) =>{
 
-    if (user) {
+    if (!user) {
+
+        return <h1>Please Login or Sign Up</h1>;
+
+    }
         return <div className='dashboard'>
     
         <Sidebar />
@@ -18,10 +22,6 @@ const Dashboard = ({user}) =>{
         
         </div>
         </div>
-
-    } else {
-        return <h1>Please Login or Sign Up</h1>;
-    }
     
 };
 
