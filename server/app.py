@@ -1,25 +1,56 @@
 #!/usr/bin/env python3
 
-from flask import request, session
+from flask import request, session, jsonify, make_response
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 
 from config import app, db, api
 from models import User, Department, Accounting, UserDepartment, Salary
 
-# Frank
+class ClearSession(Resource):
+    def delete(self):
+        pass
 class Signup(Resource):
-    pass
+    def post(self):
+        json= request.get_json()
+        user = User(
+            username=json['username'],
+            password_hash = json['password']
+        )
+
+        db.session.add(user)
+        db.session.commit()
+        return user.to_dict(), 201
 
 class CheckSession(Resource):
-    pass
+    def get(self):
+        if 'user_id' in session and session['user_id'] is not None:
+            user_id = session['user_id']
+            user = User.query.get(user_id)
+
+            if user:
+                return jsonify(user.to_dict()), 200
+
+        return jsonify({}), 204
 
 class Login(Resource):
-    pass
+    def post(self):
+        username = request.get_json()['username']
+        user = User.query.filter_by(username = username).first()
+
+
+        password = request.get_json()['password']
+
+        if user.authenticate(password):
+            session['user_id']=user.id
+            return user.to_dict(), 200
+        return {'error': 'Invalid username or password'}, 401
 
 class Logout(Resource):
-    pass
+    def delete(self):
 
+        session['user_id'] = None
+        return {'message': 'User successfully logout'}, 200
 
 
 

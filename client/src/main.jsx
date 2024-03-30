@@ -20,6 +20,8 @@ import AdmissionPage from "./components/admissions/admissions.jsx";
 import News from './components/Registration/News.jsx';
 import StudentRegistration from './components/Registration/StudentRegistration.jsx';
 import Dashboard from './components/Dashboard/Dashboard.jsx';
+import Login from './components/Login/Login.jsx';
+import SignUp from './components/Login/SignUp.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -37,6 +39,8 @@ const router = createBrowserRouter(
       <Route path="scholarship" element={<ScholarshipPage />} />
       <Route path="admissions" element={<AdmissionPage />} />
       <Route path="dashboard" element={<Dashboard />} />
+      <Route path="login" element={<Login />} />
+      <Route path="signup" element={<SignUp />} />
     </Route>
   )
 );
