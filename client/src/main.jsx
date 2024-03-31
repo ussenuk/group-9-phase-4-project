@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
@@ -25,24 +25,24 @@ import SignUp from './components/Login/SignUp.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Layout />}>
-      <Route path="" element={<Home />} />
-      <Route path="about" element={<About />} />
-      <Route path="inscription" element={<StudentRegistration />} />
-      <Route path="news" element={<News />} />
-      <Route path="StudentRegistration" element={<StudentRegistration />} />
-      <Route loader={githubInfoLoader} path="github" element={<Github />} />
-      <Route path="*" element={<div>Not Found</div>} />
-      <Route path="school" element={<School />} />
-      <Route path="secondary" element={<Highschool />} />
-      <Route path="donate" element={<DonationPage />} />
-      <Route path="scholarship" element={<ScholarshipPage />} />
-      <Route path="admissions" element={<AdmissionPage />} />
-      <Route path="dashboard" element={<Dashboard />} />
-      <Route path="login" element={<Login />} />
-      <Route path="signup" element={<SignUp />} />
-    </Route>
-  )
+      <Route path="/" element={<Layout />}>
+        <Route path="" element={<Home />} />
+        <Route path="about" element={<About />} />
+        <Route path="inscription" element={<StudentRegistration />} />
+        <Route path="news" element={<News />} />
+        <Route path="StudentRegistration" element={<StudentRegistration />} />
+        <Route loader={githubInfoLoader} path="github" element={<Github />} />
+        <Route path="*" element={<div>Not Found</div>} />
+        <Route path="school" element={<School />} />
+        <Route path="secondary" element={<Highschool />} />
+        <Route path="donate" element={<DonationPage />} />
+        <Route path="scholarship" element={<ScholarshipPage />} />
+        <Route path="admissions" element={<AdmissionPage />} />
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="login" element={<Login />} />
+        <Route path="signup" element={<SignUp />} />
+      </Route>
+     )
 );
 
 ReactDOM.createRoot(document.getElementById("root")).render(

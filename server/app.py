@@ -9,13 +9,23 @@ from models import User, Department, Accounting, UserDepartment, Salary
 
 class ClearSession(Resource):
     def delete(self):
-        pass
+    
+        # session['page_views'] = None
+        session['user_id'] = None
+
+        return {}, 204
 class Signup(Resource):
     def post(self):
         json= request.get_json()
         user = User(
             username=json['username'],
-            password_hash = json['password']
+            password_hash = json['password'],
+            fullname= json['fullname'],
+            age = json['age'],
+            gender = json['gender'],
+            bio = json['bio'],
+            image_url = json['image_url'],
+            role = json['role']
         )
 
         db.session.add(user)
@@ -51,7 +61,7 @@ class Logout(Resource):
         return {'message': 'User successfully logout'}, 200
 
 
-
+api.add_resource(ClearSession, '/clear', endpoint='clear')
 api.add_resource(Signup, '/signup', endpoint='signup')
 api.add_resource(CheckSession, '/check_session', endpoint='check_session')
 api.add_resource(Login, '/login', endpoint='login')

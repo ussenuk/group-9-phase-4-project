@@ -7,12 +7,12 @@ import './dashboard.css';
 
 const Dashboard = ({user}) =>{
 
-    if (!user) {
+    // if (!user) {
 
-        return <h1>Please Login or Sign Up</h1>;
+    //     return <h1>Please Login or Sign Up</h1>;
 
-    }
-        return <div className='dashboard'>
+    // }
+        return (<div className='dashboard'>
     
         <Sidebar />
         <div className='dashboard--content'>
@@ -22,6 +22,7 @@ const Dashboard = ({user}) =>{
         
         </div>
         </div>
+        );
     
 };
 
