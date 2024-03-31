@@ -23,7 +23,13 @@ import StudentRegistration from './components/Registration/StudentRegistration.j
 import Dashboard from './components/Dashboard/Dashboard.jsx';
 import Login from './components/Login/Login.jsx';
 import ResetPassword from './components/Login/ResetPassword.jsx';
+import UserRegistration from './components/Login/UserRegistration.jsx';
 import JobsList from './components/Jobs/JobsList.jsx';
+
+
+function handleLogin(user) {
+  setUser(user);
+}
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -41,8 +47,9 @@ const router = createBrowserRouter(
       <Route path="scholarship" element={<ScholarshipPage />} />
       <Route path="admissions" element={<AdmissionPage />} />
       <Route path="dashboard" element={<Dashboard />} />
-      <Route path="login" element={<Login />} />
+      <Route path="login" element={<Login  onLogin={handleLogin}/>} />
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/user-registration" element={<UserRegistration />} />
       <Route path="job" element={<JobsList />} />
     </Route>
   )

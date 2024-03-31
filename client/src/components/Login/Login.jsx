@@ -4,8 +4,9 @@ import * as yup from "yup";
 import { Link } from "react-router-dom";
 import "./Login.css";
 
-export default function LoginForm() {
+export default function LoginForm({ onLogin }) {
   const [users, setUsers] = useState([]);
+  // const [username, setUsername] = useState("");
   const [refreshPage, setRefreshPage] = useState(false);
   // Pass the useFormik() hook initial form values and a submit function that will
   // be called when the form is submitted
@@ -20,11 +21,40 @@ export default function LoginForm() {
       });
   }, [refreshPage]);
 
+  function handleSubmit(e) {
+    e.preventDefault();
+    fetch("http://127.0.0.1:5555/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: formik.values.username,
+        password: formik.values.password,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Invalid username or password.");
+        }
+        return response.json();
+      })
+      .then((user) => {
+        onLogin(user);
+      })
+      .catch((error) => {
+        // Error handling
+        console.error("Login error:", error.message);
+        // Display error message to the user
+        alert(error.message);
+      });
+  }
+
   const formSchema = yup.object().shape({
-    email: yup
+    username: yup
       .string()
-      .email("invalid email")
-      .required("Must enter an email address"),
+      .required("Must enter a username")
+      .min(3, "Username must be at least 3 characters"),
     password: yup
       .string()
       .required("Password is required")
@@ -33,7 +63,7 @@ export default function LoginForm() {
 
   const formik = useFormik({
     initialValues: {
-      email: "",
+      username: "",
       password: "",
     },
     validationSchema: formSchema,
@@ -59,21 +89,21 @@ export default function LoginForm() {
           <u>Login Form</u>
         </strong>
       </h2>
-      <form onSubmit={formik.handleSubmit} style={{ margin: "30px" }}>
+      <form onSubmit={handleSubmit} style={{ margin: "30px" }}>
         <div className="form-group">
           <label htmlFor="email" className="form-label">
-            Email Address:
+            Username:
           </label>
 
           <input
-            id="email"
-            name="email"
-            type="email"
+            id="username"
+            name="username"
+            type="text"
+            value={formik.values.username}
             onChange={formik.handleChange}
-            value={formik.values.email}
             className="form-input"
           />
-          <p className="error-message">{formik.errors.email}</p>
+          <p className="error-message">{formik.errors.username}</p>
         </div>
 
         <div className="form-group">
@@ -111,29 +141,12 @@ export default function LoginForm() {
         </div>
       </form>
 
-      <div>
+      <div className="button-group">
         <p>
-          Don't have an account?{" "}
-          <a href="Link to registration form">Sign up here..</a>
+          Don't have an account?
+          <Link to="/user-registration">Click here to register...</Link>
         </p>
       </div>
-
-      {/* <table style={{ padding: "15px" }}>
-        <tbody>
-          <tr>
-            <th>Email</th>
-          </tr>
-          {users === "undefined" ? (
-            <p>Loading</p>
-          ) : (
-            users.map((user, i) => (
-              <tr key={i}>
-                <td>{user.email}</td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table> */}
     </div>
   );
 }
