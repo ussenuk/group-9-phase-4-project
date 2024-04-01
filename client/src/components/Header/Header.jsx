@@ -10,6 +10,17 @@ export default function Header() {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const [isSchoolDropdownOpen, setSchoolDropdownOpen] = useState(false);
+  const [isSupportDropdownOpen, setSupportDropdownOpen] = useState(false);
+
+  const toggleSchoolDropdown = () => {
+    setSchoolDropdownOpen(!isSchoolDropdownOpen);
+  };
+
+  const toggleSupportDropdown = () => {
+    setSupportDropdownOpen(!isSupportDropdownOpen);
+  };
+
   return (
     <header className="shadow sticky z-50 top-0">
       <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5">
@@ -81,24 +92,21 @@ export default function Header() {
                   REGISTRATION
                 </NavLink>
                 <div className="opacity-0 group-hover:opacity-100 absolute left-0 top-full bg-white pt-2 mt-2 w-48 rounded-lg shadow-lg">
-                                    
-                                    <NavLink
-                                        to="/StudentRegistration"
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                    >
-                                        Online Student Registration
-                                    </NavLink>
-                                    <NavLink
-                                        to="/news"
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                    >
-                                        News Related to Our School
-                                    </NavLink>
-                  </div>
-
-                </li>
+                  <NavLink
+                    to="/StudentRegistration"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Online Student Registration
+                  </NavLink>
+                  <NavLink
+                    to="/news"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    News Related to Our School
+                  </NavLink>
+                </div>
+              </li>
               <li>
-          
                 <div
                   className="relative dropdown"
                   onMouseEnter={() => toggleDropdown()}
@@ -122,7 +130,6 @@ export default function Header() {
                         >
                           High School
                         </NavLink>
-
                         <NavLink
                           to="/admissions"
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -135,16 +142,15 @@ export default function Header() {
                 </div>
               </li>
               <li>
-                
                 <div
                   className="relative dropdown"
-                  onMouseEnter={() => toggleDropdown()}
-                  onMouseLeave={() => toggleDropdown()}
+                  onMouseEnter={() => toggleSupportDropdown()}
+                  onMouseLeave={() => toggleSupportDropdown()}
                 >
                   <span className="block py-2 pr-4 pl-3 duration-200 border-b border-gray-100 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0 cursor-pointer">
                     SUPPORT
                   </span>
-                  {isDropdownOpen && (
+                  {isSupportDropdownOpen && (
                     <ul className="absolute bg-white pt-2 border border-gray-200 dropdown">
                       <li>
                         <NavLink
@@ -164,6 +170,7 @@ export default function Header() {
                   )}
                 </div>
               </li>
+
               <li>
                 <NavLink
                   to="/job"
@@ -218,7 +225,6 @@ export default function Header() {
                   LOG IN
                 </NavLink>
               </li>
-
             </ul>
           </div>
         </div>
