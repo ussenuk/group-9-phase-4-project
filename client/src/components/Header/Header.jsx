@@ -109,13 +109,13 @@ export default function Header() {
               <li>
                 <div
                   className="relative dropdown"
-                  onMouseEnter={() => toggleDropdown()}
-                  onMouseLeave={() => toggleDropdown()}
+                  onMouseEnter={() => toggleSchoolDropdown()}
+                  onMouseLeave={() => toggleSchoolDropdown()}
                 >
                   <span className="block py-2 pr-4 pl-3 duration-200 border-b border-gray-100 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0 cursor-pointer">
                     SCHOOL
                   </span>
-                  {isDropdownOpen && (
+                  {isSchoolDropdownOpen && (
                     <ul className="absolute bg-white pt-2 border border-gray-200 dropdown">
                       <li>
                         <NavLink
@@ -225,6 +225,7 @@ export default function Header() {
                   LOG IN
                 </NavLink>
               </li>
+
             </ul>
           </div>
         </div>

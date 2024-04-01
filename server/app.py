@@ -25,6 +25,7 @@ class Signup(Resource):
         db.session.commit()
         return user.to_dict(), 201
 
+
 class Login(Resource):
             
     def post(self):
