@@ -78,7 +78,10 @@ api.add_resource(Login, '/login', endpoint='login')
 api.add_resource(Signup, '/signup', endpoint='signup')
 api.add_resource(CheckSession, '/check_session', endpoint='check_session')
 api.add_resource(Logout, '/logout', endpoint='logout')
-
+api.add_resource(Accounts, "/accounts/<int:student_id>", endpoint="accounts")
+api.add_resource(AccountingReport, "/accounting_report", endpoint="accounting_report")
+api.add_resource(Salaries, "/salaries", endpoint="salaries")
+api.add_resource(Departments, "/departments/<int:department_id>", endpoint="department")
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
