@@ -6,7 +6,7 @@
 .dropdown > span {
     cursor: pointer;
     padding: 1px;
-    border-bottom: 1px solid #ccc;
+    /* border-bottom: 1px solid #ccc; */
     max-width: 200px;
     white-space: nowrap; 
     overflow: hidden;
@@ -35,8 +35,8 @@
     color: #333;
     text-decoration: none;
     transition: background-color 0.3s ease;
-    max-width: 200px; /* Adjust as needed */
-    white-space: nowrap; /* Ensure text fits in one line */
+    max-width: 200px; 
+    white-space: nowrap; 
     overflow: hidden;
     text-overflow: ellipsis;
 }
