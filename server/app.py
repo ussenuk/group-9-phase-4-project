@@ -59,11 +59,11 @@ class Login(Resource):
         # Return error message if username or password is incorrect
         return {"message": "Invalid username or password."}, 401
     
-# class Logout(Resource):
+class Logout(Resource):
     
-#     def delete(self):
-#         session['user_id']=None
-#         return {},204
+    def delete(self):
+        session['user_id']=None
+        return {},204
 
 class CheckSession(Resource):
     

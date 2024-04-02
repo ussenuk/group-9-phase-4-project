@@ -41,6 +41,7 @@ export default function LoginForm({ onLogin }) {
       })
       .then((user) => {
         onLogin(user);
+        console.log("Successfully logged in");
       })
       .catch((error) => {
         // Error handling
