@@ -5,6 +5,42 @@ import * as Yup from "yup";
 const Registration = () => {
   const [isRegistered, setIsRegistered] = useState(false);
 
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    fetch("http://127.0.0.1:5555/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: formik.values.username,
+        fullname: formik.values.fullname,
+        age: formik.values.age,
+        gender: formik.values.gender,
+        role: formik.values.role,
+        password: formik.values.password,
+        password: formik.values.password,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Invalid entries.");
+        }
+        return response.json();
+      })
+      .then((user) => {
+        // onLogin(user);
+        console.log("Successfully created a user");
+      })
+      .catch((error) => {
+        // Error handling
+        console.error("User creation error:", error.message);
+        // Display error message to the user
+        alert(error.message);
+      });
+  }
+
   const initialValues = {
     username: "",
     fullname: "",
@@ -29,11 +65,11 @@ const Registration = () => {
       .required("Confirm Password is required"),
   });
 
-  const onSubmit = (values, { resetForm }) => {
-    console.log(values);
-    resetForm();
-    setIsRegistered(true);
-  };
+  // const onSubmit = (values, { resetForm }) => {
+  //   console.log(values);
+  //   resetForm();
+  //   setIsRegistered(true);
+  // };
 
   return (
     <div className="bg-blue-100 py-8 px-4">
@@ -43,7 +79,7 @@ const Registration = () => {
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit}
       >
         {() => (
           <Form className="max-w-md mx-auto">
