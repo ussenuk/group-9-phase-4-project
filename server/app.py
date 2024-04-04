@@ -18,13 +18,16 @@ class Signup(Resource):
         json= request.get_json()
         user = User(
             username=json['username'],
+            fullname=json['fullname'],
+            age=json['age'],
+            gender=json['gender'],
+            role=json['role'],
             password_hash = json['password']
         )
 
         db.session.add(user)
         db.session.commit()
         return user.to_dict(), 201
-
 
 class Login(Resource):
             
@@ -159,7 +162,7 @@ api.add_resource(AccountingReport, "/accounting_report", endpoint="accounting_re
 api.add_resource(Salaries, "/salaries", endpoint="salaries")
 api.add_resource(Departments, "/departments/<int:department_id>", endpoint="department")
 
-# api.add_resource(Logout, '/logout', endpoint='logout')
+api.add_resource(Logout, '/logout', endpoint='logout')
 
 
 if __name__ == '__main__':

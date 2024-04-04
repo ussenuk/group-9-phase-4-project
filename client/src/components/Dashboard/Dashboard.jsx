@@ -5,10 +5,10 @@ import Profile from './Profile';
 
 import './dashboard.css';
 
-const Dashboard = () =>{
+const Dashboard = ({onLogout, user}) =>{
     return <div className='dashboard'>
     
-    <Sidebar />
+    <Sidebar onLogout={onLogout} user={user}/>
     <div className='dashboard--content'>
 
     <Content />
