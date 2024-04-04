@@ -6,7 +6,7 @@ import Profile from "./Profile";
 import "./dashboard.css";
 
 const Dashboard = ({ onLogout, onLogin, user }) => {
-    console.log("User in Dashboard:",user); // Log the user object here
+    console.log("User in Dashboard:",{user}); // Log the user object here
   return (
     <div className="dashboard">
       <Sidebar onLogout={onLogout} />
