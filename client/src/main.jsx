@@ -25,7 +25,10 @@ import Login from './components/Login/Login.jsx';
 import ResetPassword from './components/Login/ResetPassword.jsx';
 import UserRegistration from './components/Login/UserRegistration.jsx';
 import JobsList from './components/Jobs/JobsList.jsx';
-
+import AccountingRecords from './components/Dashboard/Accounts/AccountRecords.jsx'
+import Admin from './components/Dashboard/Accounts/admin.jsx'
+import Department from './components/Dashboard/Accounts/Department.jsx'
+import StudentInfo from './components/Dashboard/Accounts/StudentInfo.jsx'
 
 function handleLogin(user) {
   setUser(user);
@@ -51,6 +54,10 @@ const router = createBrowserRouter(
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/user-registration" element={<UserRegistration />} />
       <Route path="job" element={<JobsList />} />
+      <Route path="accounting-records" element={<AccountingRecords />} />
+      <Route path="admin" element={<Admin />} />
+      <Route path = "departments" element={<Department />} />
+      <Route path="studentinfo" element={<StudentInfo  />} />
     </Route>
   )
 );
