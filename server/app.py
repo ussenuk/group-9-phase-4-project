@@ -163,7 +163,8 @@ class Users(Resource):
                 "fullname": user.fullname,
                 "age": user.age,
                 "gender": user.gender,
-                "role": user.role
+                "role": user.role,
+                "bio": user.bio,
             }
             
             users.append(user_dict)

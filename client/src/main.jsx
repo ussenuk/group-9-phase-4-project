@@ -21,6 +21,8 @@ import AdmissionPage from "./components/admissions/admissions.jsx";
 import News from "./components/Registration/News.jsx";
 import StudentRegistration from "./components/Registration/StudentRegistration.jsx";
 import Dashboard from "./components/Dashboard/Dashboard.jsx";
+import Sidebar from "./components/Dashboard/Sidebar.jsx";
+import UsersList from "./components/Dashboard/UsersList.jsx";
 import Login from "./components/Login/Login.jsx";
 import ResetPassword from "./components/Login/ResetPassword.jsx";
 import UserRegistration from "./components/Login/UserRegistration.jsx";
@@ -38,32 +40,6 @@ function Main() {
       }
     });
   }, []);
-
-  if (user) {
-    return (
-      <div>
-        <h2>Welcome, {user.username}!</h2>
-        <a href="http://127.0.0.1:5173/dashboard">
-          Click here to view the Dash Board
-        </a>
-        {/* <Link to="http://127.0.0.1:5173/dashboard">Dash Board</Link> */}
-        <br />
-        <button
-            onClick={handleLogout}
-            style={{
-              marginTop: "10px",
-              marginRight: "5px",
-              marginLeft: "5px",
-              border: "0.5px solid #111111",
-            }}
-          >
-            Logout
-          </button>
-      
-      </div>
-    );
-  }
-  
 
   function handleLogin(user) {
     setUser(user);
@@ -90,9 +66,10 @@ function Main() {
         <Route path="admissions" element={<AdmissionPage />} />
         <Route
           path="dashboard"
-          element={<Dashboard onLogout={handleLogout} user={user} />}
+          element={<Dashboard onLogin={handleLogin} onLogout={handleLogout} user={user}/>}
         />
-        <Route path="login" element={<Login onLogin={handleLogin} />} />
+        <Route path="/UsersList" element={<UsersList />} />
+        <Route path="login" element={<Login onLogin={handleLogin} user={user} />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/user-registration" element={<UserRegistration />} />
         <Route path="job" element={<JobsList />} />
