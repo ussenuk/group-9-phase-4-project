@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import request, session, jsonify
+from flask import request, session, jsonify,make_response
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 
@@ -153,6 +153,22 @@ class Departments(Resource):
         else:
             return {"error": "UserDepartment not found"}, 404
 
+class Users(Resource):
+    def get(self):
+        users=[]
+        for user in User.query.all():
+            user_dict={
+                "id": user.id,
+                "username": user.username,
+                "fullname": user.fullname,
+                "age": user.age,
+                "gender": user.gender,
+                "role": user.role
+            }
+            
+            users.append(user_dict)
+        
+        return make_response(jsonify(users),200)
 
 api.add_resource(Login, '/login', endpoint='login')
 api.add_resource(Signup, '/signup', endpoint='signup')
@@ -161,8 +177,8 @@ api.add_resource(Accounts, "/accounts/<int:student_id>", endpoint="accounts")
 api.add_resource(AccountingReport, "/accounting_report", endpoint="accounting_report")
 api.add_resource(Salaries, "/salaries", endpoint="salaries")
 api.add_resource(Departments, "/departments/<int:department_id>", endpoint="department")
-
 api.add_resource(Logout, '/logout', endpoint='logout')
+api.add_resource(Users, '/users', endpoint='users')
 
 
 if __name__ == '__main__':
