@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   BiHome,
@@ -8,15 +8,19 @@ import {
   BiStats,
   BiTask,
   BiHelpCircle,
+  BiGroup
 } from "react-icons/bi";
 
 import "./sidebar.css";
 const Sidebar = ({ onLogout }) => {
+  const navigate = useNavigate();
+
   function handleLogout() {
     fetch("http://127.0.0.1:5555/logout", {
       method: "DELETE",
     }).then(() => {
       onLogout();
+      navigate("/");
     });
   }
 
@@ -31,6 +35,11 @@ const Sidebar = ({ onLogout }) => {
           <BiHome className="icon" />
           Dashboard
         </a>
+        <div className="item">
+          <BiGroup className="icon" />
+          <Link to="/UsersList">List of Active Users</Link>
+        </div>
+
         <a href="#" className="item">
           <BiTask className="icon" />
           Assigment

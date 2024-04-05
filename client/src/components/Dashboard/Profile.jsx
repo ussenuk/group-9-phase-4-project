@@ -28,19 +28,20 @@ const classes = [
 ];
 
 
-const Profile = () => {
+const Profile = ({user}) => {
+  if(user){
   return (
     <div className='profile'>
 
       <ProfileHeader/>
-
-      <div className='user--profile'>
+      
+        <div className='user--profile'>
         <div className='user--detail'>
           <img src={userImage} alt="" />
-          <h3 className='username'> Julius Mwangi</h3>
+          <h3 className='username'> {user.username}</h3>
           <span className='profession'>Teacher</span>
         </div>
-
+      
         <div className='user-classes'>
           { classes.map((classe) => (
             <div className='classes'>
@@ -58,8 +59,12 @@ const Profile = () => {
         </div>
 
       </div>
+
     </div>
   );
+}else{
+  return null;
+}
 };
 
 export default Profile
