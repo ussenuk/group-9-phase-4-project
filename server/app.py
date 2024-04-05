@@ -5,7 +5,7 @@ from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 
 from config import app, db, api
-from models import User, Department, Accounting, UserDepartment, Salary
+from models import User, Department, Accounting, UserDepartment, Salary, Job
 
 @app.route('/')
 def home():
@@ -171,6 +171,22 @@ class Users(Resource):
         
         return make_response(jsonify(users),200)
 
+class Jobs(Resource):
+    def get(self):
+        jobs=[]
+        for job in Job.query.all(): 
+            job_dict={
+                "id": job.id,
+                "title": job.title,
+                "level": job.level,
+                "description": job.description,
+                "requirements": job.requirements,
+            }
+            
+            jobs.append(job_dict)
+        
+        return make_response(jsonify(jobs),200)
+
 api.add_resource(Login, '/login', endpoint='login')
 api.add_resource(Signup, '/signup', endpoint='signup')
 api.add_resource(CheckSession, '/check_session', endpoint='check_session')
@@ -180,6 +196,8 @@ api.add_resource(Salaries, "/salaries", endpoint="salaries")
 api.add_resource(Departments, "/departments/<int:department_id>", endpoint="department")
 api.add_resource(Logout, '/logout', endpoint='logout')
 api.add_resource(Users, '/users', endpoint='users')
+api.add_resource(Jobs, '/jobs', endpoint='jobs')
+
 
 
 if __name__ == '__main__':

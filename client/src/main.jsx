@@ -21,12 +21,12 @@ import AdmissionPage from "./components/admissions/admissions.jsx";
 import News from "./components/Registration/News.jsx";
 import StudentRegistration from "./components/Registration/StudentRegistration.jsx";
 import Dashboard from "./components/Dashboard/Dashboard.jsx";
-import Sidebar from "./components/Dashboard/Sidebar.jsx";
+// import Sidebar from "./components/Dashboard/Sidebar.jsx";
 import UsersList from "./components/Dashboard/UsersList.jsx";
 import Login from "./components/Login/Login.jsx";
 import ResetPassword from "./components/Login/ResetPassword.jsx";
 import UserRegistration from "./components/Login/UserRegistration.jsx";
-import JobsList from "./components/Jobs/JobsList.jsx";
+import Jobs from "./components/Jobs/Jobs.jsx";
 
 function Main() {
   const [user, setUser] = useState(null);
@@ -71,8 +71,9 @@ function Main() {
         <Route path="/UsersList" element={<UsersList />} />
         <Route path="login" element={<Login onLogin={handleLogin} user={user} />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/user-registration" element={<UserRegistration />} />
-        <Route path="job" element={<JobsList />} />
+        <Route path="/user-registration" element={<UserRegistration />} />        
+        <Route path="job" element={<Jobs />} />
+
       </Route>
     )
   );

@@ -5,7 +5,7 @@ from random import randint, choice as rc, random, sample,uniform
 from faker import Faker
 
 from app import app
-from models import db, User, Department, Accounting, UserDepartment, Salary
+from models import db, User, Department, Accounting, UserDepartment, Salary, Job
 
 fake = Faker()
 
@@ -15,6 +15,7 @@ with app.app_context():
     Department.query.delete()
     Accounting.query.delete()
     UserDepartment.query.delete()
+    Job.query.delete()
 
     fake = Faker()
 
@@ -139,5 +140,52 @@ with app.app_context():
 
     db.session.add_all(salaries)
     db.session.commit()
+    
+    print("Creating Jobs...")
+    
+    job_details = [
+    {
+        "id": 1,
+        "title": "Math Teacher",
+        "level": "High School",
+        "description": "Teach mathematics to high school students.",
+        "requirements": "Applicant must be a bachelor's degree holder in the relevant subject. Masters degree will be an added advantage."
+    },
+    {
+        "id": 2,
+        "title": "Science Teacher",
+        "level": "Middle School",
+        "description": "Teach science to middle school students.",
+        "requirements": "Applicant must be a bachelor's degree holder in the relevant subject. Masters degree will be an added advantage."
+    },
+    {
+        "id": 3,
+        "title": "Librarian",
+        "level": "Elementary School",
+        "description": "Manage library resources and assist students.",
+        "requirements": "Applicant must be a bachelor's degree holder in the relevant subject. Masters degree will be an added advantage."
+    },
+    {
+        "id": 4,
+        "title": "Kiswahili Teacher",
+        "level": "Middle School",
+        "description": "Teach Kiswahili to middle school students.",
+        "requirements": "Applicant must be a bachelor's degree holder in the relevant subject. Masters degree will be an added advantage."
+    },
+    {
+        "id": 5,
+        "title": "Football coach",
+        "level": "All levels",
+        "description": "Offer professional coaching to the school football team.",
+        "requirements": "Applicant must have at least 5 years experience in coaching a school team."
+    }
+]
+    
+    def seed_jobs():
+        for job_data in job_details:
+            job = Job(**job_data)
+            db.session.add(job)
+        db.session.commit()
 
+    seed_jobs()
     print("Seed data created successfully!")
