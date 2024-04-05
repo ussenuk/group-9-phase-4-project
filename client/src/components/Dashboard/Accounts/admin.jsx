@@ -52,10 +52,14 @@ export default function TeacherStudentTables() {
 
   const handleTeacherDelete = async (teacherId) => {
     try {
-      await fetch(`http://127.0.0.1:5555/admin/${teacherId}`, {
+      const response = await fetch(`http://127.0.0.1:5555/admin/${teacherId}`, {
         method: 'DELETE',
       });
-      setTeachers(teachers.filter((teacher) => teacher.teacher_id !== teacherId));
+      if (response.ok) {
+        setTeachers(teachers.filter((teacher) => teacher.teacher_id !== teacherId));
+      } else {
+        throw new Error('Failed to delete teacher');
+      }
     } catch (error) {
       console.error('Error deleting teacher:', error.message);
     }
@@ -63,17 +67,46 @@ export default function TeacherStudentTables() {
 
   const handleStudentDelete = async (studentId) => {
     try {
-      await fetch(`http://127.0.0.1:5555/admin/${studentId}`, {
+      const response = await fetch(`http://127.0.0.1:5555/admin/${studentId}`, {
         method: 'DELETE',
       });
-      setStudents(students.filter((student) => student.student_id !== studentId));
+      if (response.ok) {
+        setStudents(students.filter((student) => student.student_id !== studentId));
+      } else {
+        throw new Error('Failed to delete student');
+      }
     } catch (error) {
       console.error('Error deleting student:', error.message);
     }
   };
 
   const handleAddTeacher = async () => {
-    //  add a new teacher
+    try {
+      const response = await fetch('http://127.0.0.1:5555/admin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: 'teacher_username', 
+          fullname: 'teacher_fullname', 
+          age: 30, 
+          gender: 'Male',
+          bio: 'Teacher bio', 
+          image_url: 'teacher_image_url', 
+        }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        // Update state to include the newly added teacher
+        setTeachers([...teachers, data]);
+        console.log('Teacher added successfully');
+      } else {
+        throw new Error('Failed to add teacher');
+      }
+    } catch (error) {
+      console.error('Error adding teacher:', error.message);
+    }
   };
 
   return (

@@ -83,15 +83,15 @@ class Accounts(Resource):
 
         accounting_report = []
         for record in accounting_records:
-                accounting_report.append(
-                    {
-                        "student_id": record.student_id,
-                        "name": record.account_name,
-                        "fee_status": record.accounting_status_perterm,
-                        "paid": record.amount_paid,
-                        "balance": record.balance,
-                    }
-                )
+            accounting_report.append(
+                {
+                    "student_id": record.student_id,
+                    "name": record.account_name,
+                    "fee_status": record.accounting_status_perterm,
+                    "paid": record.amount_paid,
+                    "balance": record.balance,
+                }
+            )
 
         return make_response(jsonify(accounting_report), 200)
 
@@ -122,26 +122,30 @@ class AccountingReport(Resource):
 
 ###### admin
 class Admin(Resource):
+
     def delete(self, user_id):
         current_user_id = session.get("user_id")
-        user = User.query.filter_by(id=current_user_id).first()
-        
-        if user and user.role in ["teacher", "student"]:
-            if user.role == "teacher" or user.role == "student":
-                entity = User.query.filter_by(id=user_id).first()
-                if entity:
+        if current_user_id == 20:
+            entity = User.query.filter_by(id=user_id).first()
+            if entity:
+                if entity.role == "teacher" or entity.role == "student":
                     db.session.delete(entity)
                     db.session.commit()
-                    return {"message": f"{user.role.capitalize()} deleted successfully"}, 200
+                    return {
+                        "message": f"{entity.role.capitalize()} deleted successfully"
+                    }, 200
                 else:
-                    return {"error": f"{user.role.capitalize()} not found"}, 404
-        return {"error": "Unauthorized access or resource not found"}, 403
+                    return {
+                        "error": "Invalid role. Only 'teacher' or 'student' can be deleted"
+                    }, 400
+            else:
+                return {"error": "User not found"}, 404
+        else:
+            return {"error": "Unauthorized access"}, 403
 
     def post(self):
         current_user_id = session.get("user_id")
-        user = User.query.filter_by(id=current_user_id).first()
-        
-        if user and user.role == "teacher":
+        if current_user_id == 20:
             try:
                 new_teacher = User(
                     username=request.json["username"],
@@ -149,7 +153,7 @@ class Admin(Resource):
                     age=int(request.json["age"]),
                     gender=request.json["gender"],
                     bio=request.json["bio"],
-                    image_url=request.json["image_url"]
+                    image_url=request.json["image_url"],
                 )
                 db.session.add(new_teacher)
                 db.session.commit()
@@ -159,7 +163,9 @@ class Admin(Resource):
             except Exception as e:
                 return {"error": str(e)}, 500
         else:
-            return {"error": "Unauthorized access or invalid user role"}, 403
+            return {"error": "Unauthorized access"}, 403
+
+
 # #########
 class Salaries(Resource):
     def get(self):
@@ -196,6 +202,7 @@ class Departments(Resource):
         else:
             return {"error": "UserDepartment not found"}, 404
 
+
 class AllDepartments(Resource):
     def get(self):
         departments = Department.query.all()
@@ -209,6 +216,7 @@ class AllDepartments(Resource):
                 }
             )
         return jsonify(departments_list)
+
 
 api.add_resource(Login, "/login", endpoint="login")
 api.add_resource(Signup, "/signup", endpoint="signup")
