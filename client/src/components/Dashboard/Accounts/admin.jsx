@@ -98,7 +98,7 @@ export default function TeacherStudentTables() {
       });
       if (response.ok) {
         const data = await response.json();
-        // Update state to include the newly added teacher
+        
         setTeachers([...teachers, data]);
         console.log('Teacher added successfully');
       } else {

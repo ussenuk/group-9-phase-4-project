@@ -1,60 +1,32 @@
 #!/usr/bin/env python3
 
-from flask import request, session, jsonify,make_response
+from flask import request, session, jsonify, make_response
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
-# from werkzeug.security import generate_password_hash
 
 from config import app, db, api
-from models import User, Department, Accounting, UserDepartment, Salary, Job
+from models import User, Department, Accounting, UserDepartment, Salary
 
-@app.route('/')
+
+@app.route("/")
 def home():
-    return 'Welcome to my API.' 
+    return "Welcome to my API."
+
 
 # Frank
 class Signup(Resource):
-      
+
     def post(self):
         json = request.get_json()
-        if not json:
-            return {"message": "Request body is empty."}, 400
+        user = User(username=json["username"], password_hash=json["password"])
 
-        # Validate required fields
-        required_fields = ['username', 'fullname', 'age', 'gender', 'role', 'password']
-        for field in required_fields:
-            if field not in json or not json[field]:
-                return {"message": f"Field '{field}' is required."}, 400
+        db.session.add(user)
+        db.session.commit()
+        return user.to_dict(), 201
 
-        # Check if the username already exists
-        existing_user = User.query.filter_by(username=json['username']).first()
-        if existing_user:
-            return {"message": "Username already exists."}, 500
-        
-        try:
-            user = User(
-                username=json['username'],
-                fullname=json['fullname'],
-                age=json['age'],
-                gender=json['gender'],
-                role=json['role'],
-                password_hash=json['password']
-            )
-
-            db.session.add(user)
-            db.session.commit()
-            return user.to_dict(), 201
-
-        except IntegrityError as e:
-            db.session.rollback()
-            return {"message": "Username already exists."}, 409
-
-        except Exception as e:
-            db.session.rollback()
-            return {"message": str(e)}, 500
 
 class Login(Resource):
-            
+
     def post(self):
         data = request.get_json()
         username = data.get("username")
@@ -74,7 +46,7 @@ class Login(Resource):
             print(f"User found: {user}")
             if user.authenticate(password):
                 # Store user id in session
-                session['user_id'] = user.id
+                session["user_id"] = user.id
                 print("User authenticated successfully")
                 # Return user details
                 return user.to_dict(), 200
@@ -85,35 +57,44 @@ class Login(Resource):
 
         # Return error message if username or password is incorrect
         return {"message": "Invalid username or password."}, 401
-    
-class Logout(Resource):
-    
-    def delete(self):
-        session['user_id']=None
-        return {},204
+
+
+# class Logout(Resource):
+
+#     def delete(self):
+#         session['user_id']=None
+#         return {},204
+
 
 class CheckSession(Resource):
-    
+
     def get(self):
-        
-        user_id=session.get('user_id')
+
+        user_id = session.get("user_id")
         if user_id:
-            user=User.query.filter(User.id==user_id).first()
-            return user.to_dict(),200
+            user = User.query.filter(User.id == user_id).first()
+            return user.to_dict(), 200
         return {}, 401
 
+
 class Accounts(Resource):
-    def get(self, student_id):
-        accounting = Accounting.query.filter_by(student_id=student_id).first()
-        if accounting:
-            return {
-                "name": accounting.account_name,
-                "fee_status": accounting.accounting_status_perterm,
-                "paid": accounting.amount_paid,
-                "balance": accounting.balance,
-            }, 200
-        else:
-            return {"error": "Student not found"}, 404
+    def get(self):
+        accounting_records = Accounting.query.all()
+
+        accounting_report = []
+        for record in accounting_records:
+            accounting_report.append(
+                {
+                    "student_id": record.student_id,
+                    "name": record.account_name,
+                    "fee_status": record.accounting_status_perterm,
+                    "paid": record.amount_paid,
+                    "balance": record.balance,
+                }
+            )
+
+        return make_response(jsonify(accounting_report), 200)
+
 
 class AccountingReport(Resource):
     def get(self):
@@ -134,11 +115,58 @@ class AccountingReport(Resource):
                     }
                 )
 
-            return jsonify(accounting_report), 200
+            return make_response(jsonify(accounting_report), 200)
         else:
             return {"error": "Unauthorized access"}, 403
 
 
+###### admin
+class Admin(Resource):
+
+    def delete(self, user_id):
+        current_user_id = session.get("user_id")
+        if current_user_id == 20:
+            entity = User.query.filter_by(id=user_id).first()
+            if entity:
+                if entity.role == "teacher" or entity.role == "student":
+                    db.session.delete(entity)
+                    db.session.commit()
+                    return {
+                        "message": f"{entity.role.capitalize()} deleted successfully"
+                    }, 200
+                else:
+                    return {
+                        "error": "Invalid role. Only 'teacher' or 'student' can be deleted"
+                    }, 400
+            else:
+                return {"error": "User not found"}, 404
+        else:
+            return {"error": "Unauthorized access"}, 403
+
+    def post(self):
+        current_user_id = session.get("user_id")
+        if current_user_id == 20:
+            try:
+                new_teacher = User(
+                    username=request.json["username"],
+                    fullname=request.json["fullname"],
+                    age=int(request.json["age"]),
+                    gender=request.json["gender"],
+                    bio=request.json["bio"],
+                    image_url=request.json["image_url"],
+                )
+                db.session.add(new_teacher)
+                db.session.commit()
+                return {"message": "Teacher added successfully"}, 201
+            except KeyError as e:
+                return {"error": f"Missing required field: {e}"}, 400
+            except Exception as e:
+                return {"error": str(e)}, 500
+        else:
+            return {"error": "Unauthorized access"}, 403
+
+
+# #########
 class Salaries(Resource):
     def get(self):
         salary_list = []
@@ -163,9 +191,7 @@ class Departments(Resource):
             department_id=department_id
         ).first()
         if user_department:
-            department = Department.query.filter_by(
-                id=user_department.department_id
-            ).first()
+            department = Department.query.get(user_department.department_id)
             if department:
                 return {
                     "dept_name": department.name,
@@ -176,89 +202,33 @@ class Departments(Resource):
         else:
             return {"error": "UserDepartment not found"}, 404
 
-class Users(Resource):
+
+class AllDepartments(Resource):
     def get(self):
-        users=[]
-        for user in User.query.all():
-            user_dict={
-                "id": user.id,
-                "username": user.username,
-                "fullname": user.fullname,
-                "age": user.age,
-                "gender": user.gender,
-                "role": user.role,
-                "bio": user.bio,
-            }
-            
-            users.append(user_dict)
-        
-        return make_response(jsonify(users),200)
+        departments = Department.query.all()
+        departments_list = []
+        for department in departments:
+            departments_list.append(
+                {
+                    "dept_id": department.id,
+                    "dept_name": department.name,
+                    "program": department.subject,
+                }
+            )
+        return jsonify(departments_list)
 
-class Jobs(Resource):
-    def get(self):
-        jobs=[]
-        for job in Job.query.all(): 
-            job_dict={
-                "id": job.id,
-                "title": job.title,
-                "level": job.level,
-                "description": job.description,
-                "requirements": job.requirements,
-            }
-            
-            jobs.append(job_dict)
-        
-        return make_response(jsonify(jobs),200)
 
-class ResetPassword(Resource):
-    
-    def patch(self):
-        # Get JSON data from request
-        json_data = request.get_json()
-
-        # Validate JSON data
-        if not json_data:
-            return {"message": "Request body is empty."}, 400
-
-        # Validate required fields
-        required_fields = ["username", "newPassword", "confirmNewPassword"]
-        for field in required_fields:
-            if field not in json_data or not json_data[field]:
-                return {"message": f"Field '{field}' is required."}, 400
-
-        
-        # Check if new password matches confirm new password
-        if json_data["newPassword"] != json_data["confirmNewPassword"]:
-            return {"message": "New password and confirm new password do not match."}, 400
-        
-        # Query the database for the user with the provided username
-        user = User.query.filter_by(username=json_data["username"]).first()
-
-        # Check if the user exists
-        if not user:
-            return {"message": "User not found."}, 404
-
-        try:
-            user.password_hash = json_data["newPassword"]
-            db.session.commit()
-            return {"message": "Password reset successfully."}, 200
-        except IntegrityError:
-            db.session.rollback()
-            return {"message": "Failed to reset password."}, 500
-
-api.add_resource(Login, '/login', endpoint='login')
-api.add_resource(Signup, '/signup', endpoint='signup')
-api.add_resource(CheckSession, '/check_session', endpoint='check_session')
-api.add_resource(Accounts, "/accounts/<int:student_id>", endpoint="accounts")
+api.add_resource(Login, "/login", endpoint="login")
+api.add_resource(Signup, "/signup", endpoint="signup")
+api.add_resource(CheckSession, "/check_session", endpoint="check_session")
+api.add_resource(Accounts, "/accounts", endpoint="accounts")
 api.add_resource(AccountingReport, "/accounting_report", endpoint="accounting_report")
 api.add_resource(Salaries, "/salaries", endpoint="salaries")
-api.add_resource(Departments, "/departments/<int:department_id>", endpoint="department")
-api.add_resource(Logout, '/logout', endpoint='logout')
-api.add_resource(Users, '/users', endpoint='users')
-api.add_resource(Jobs, '/jobs', endpoint='jobs')
-api.add_resource(ResetPassword, '/reset_password', endpoint='reset_password')
+api.add_resource(Departments, "/department/<int:department_id>", endpoint="department")
+api.add_resource(AllDepartments, "/departments", endpoint="departments")
+api.add_resource(Admin, "/admin", endpoint="admin")
+# api.add_resource(Logout, '/logout', endpoint='logout')
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(port=5555, debug=True)
