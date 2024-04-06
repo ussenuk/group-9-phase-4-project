@@ -5,9 +5,9 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 
 export default function LoginForm({ onLogin, user }) {
-
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
+  const [error, setError] = useState(null);
   // const [username, setUsername] = useState("");
   const [refreshPage, setRefreshPage] = useState(false);
   // Pass the useFormik() hook initial form values and a submit function that will
@@ -36,6 +36,9 @@ export default function LoginForm({ onLogin, user }) {
       }),
     })
       .then((response) => {
+        if (response.status === 400) {
+          throw new Error("Both username and password are required.");
+        }
         if (!response.ok) {
           throw new Error("Invalid username or password.");
         }
@@ -44,13 +47,9 @@ export default function LoginForm({ onLogin, user }) {
       .then((user) => {
         onLogin(user);
         navigate("/dashboard");
-
       })
       .catch((error) => {
-        // Error handling
-        console.error("Login error:", error.message);
-        // Display error message to the user
-        alert(error.message);
+        setError(error.message);
       });
   }
 
@@ -95,7 +94,7 @@ export default function LoginForm({ onLogin, user }) {
       </h2>
       <form onSubmit={handleSubmit} style={{ margin: "30px" }}>
         <div className="form-group">
-          <label htmlFor="email" className="form-label">
+          <label htmlFor="username" className="form-label">
             Username:
           </label>
 
@@ -131,7 +130,7 @@ export default function LoginForm({ onLogin, user }) {
             Remember me?
           </label>
         </div>
-
+        {error && <p className="error-message">{error}</p>}{" "}
         <div className="button-group">
           <button type="submit" className="submit-button">
             Login
