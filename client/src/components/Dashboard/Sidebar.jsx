@@ -78,10 +78,7 @@ const Sidebar = ({ onLogout }) => {
           <BiTask className="icon" />
           Assigment
         </a>
-        <a href="#" className="item">
-          <BiStats className="icon" />
-          Accounting
-        </a>
+        
 
         <a href="#" className="item">
           <BiSolidReport className="icon" />
