@@ -1,18 +1,24 @@
 import { useFormik } from "formik";
 import * as yup from "yup";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./ResetPassword.css";
 
 export default function ResetPassword() {
   const [resetSuccess, setResetSuccess] = useState(false);
   const [resetError, setResetError] = useState(null);
+  const navigate = useNavigate();
 
   const formSchema = yup.object().shape({
+    username: yup
+      .string()
+      .required("Username is required")
+      .min(3, "Username must be at least 3 characters"),
     newPassword: yup
       .string()
       .required("New Password is required")
       .min(6, "New Password must be at least 6 characters"),
-    confirmPassword: yup
+    confirmNewPassword: yup
       .string()
       .required("Confirm New Password is required")
       .oneOf([yup.ref("newPassword"), null], "Passwords must match"),
@@ -20,66 +26,93 @@ export default function ResetPassword() {
 
   const formik = useFormik({
     initialValues: {
+      username: "",
       newPassword: "",
-      confirmPassword: "",
+      confirmNewPassword: "",
     },
     validationSchema: formSchema,
-    onSubmit: async (values) => {
-      try {
-        const response = await fetch("/api/reset-password", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(values),
+    onSubmit: (values) => {
+      fetch("http://127.0.0.1:5555/reset_password", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      })
+        .then((response) => {
+          if (response.ok) {
+            setResetSuccess(true);
+            setResetError(null);
+            navigate("/login"); // Redirect to login page after successful reset
+          } else {
+            setResetSuccess(false);
+            setResetError("Failed to reset password.");
+          }
+        })
+        .catch((error) => {
+          setResetSuccess(false);
+          setResetError("An error occurred while resetting password.");
         });
-
-        if (response.ok) {
-          setResetSuccess(true);
-          setResetError(null);
-        } else {
-          const errorData = await response.json();
-          setResetError(errorData.message);
-        }
-      } catch (error) {
-        setResetError("An error occurred while resetting password.");
-      }
     },
   });
 
   return (
     <div className="login-form-container">
       <h2>Reset Password</h2>
-      {resetSuccess && <p>Password reset successfully!</p>}
-      {resetError && <p style={{ color: "red" }}>{resetError}</p>}
-      <form onSubmit={formik.handleSubmit} style={{ margin: "30px" }}>
+      <form onSubmit={formik.handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="username" className="form-label">Username:</label>
+          <input
+            id="username"
+            name="username"
+            type="text"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.username}
+            className="form-input"
+          />
+          {formik.touched.username && formik.errors.username ? (
+            <div className="error-message">{formik.errors.username}</div>
+          ) : null}
+        </div>
+
         <div className="form-group">
           <label htmlFor="newPassword" className="form-label">New Password:</label>
-          
           <input
             id="newPassword"
             name="newPassword"
             type="password"
             onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             value={formik.values.newPassword}
             className="form-input"
           />
-          <p className="error-message">{formik.errors.newPassword}</p>
-          </div>
+          {formik.touched.newPassword && formik.errors.newPassword ? (
+            <div className="error-message">{formik.errors.newPassword}</div>
+          ) : null}
+        </div>
+
         <div className="form-group">
-          <label htmlFor="confirmPassword" className="form-label">Confirm New Password:</label>
-         
+          <label htmlFor="confirmNewPassword" className="form-label">Confirm New Password:</label>
           <input
-            id="confirmPassword"
-            name="confirmPassword"
+            id="confirmNewPassword"
+            name="confirmNewPassword"
             type="password"
             onChange={formik.handleChange}
-            value={formik.values.confirmPassword}
+            onBlur={formik.handleBlur}
+            value={formik.values.confirmNewPassword}
             className="form-input"
           />
-          <p className="error-message">{formik.errors.confirmPassword}</p>
+          {formik.touched.confirmNewPassword &&
+          formik.errors.confirmNewPassword ? (
+            <div className="error-message">{formik.errors.confirmNewPassword}</div>
+          ) : null}
         </div>
-          <button type="submit" className="reset-password-button">Reset Password</button>
+
+        {resetError && <div>{resetError}</div>}
+        {resetSuccess && <div>Password reset successfully!</div>}
+
+        <button type="submit" className="reset-password-button">Reset Password</button>
       </form>
     </div>
   );

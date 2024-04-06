@@ -3,6 +3,7 @@
 from flask import request, session, jsonify,make_response
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
+# from werkzeug.security import generate_password_hash
 
 from config import app, db, api
 from models import User, Department, Accounting, UserDepartment, Salary, Job
@@ -13,21 +14,44 @@ def home():
 
 # Frank
 class Signup(Resource):
-  
+      
     def post(self):
-        json= request.get_json()
-        user = User(
-            username=json['username'],
-            fullname=json['fullname'],
-            age=json['age'],
-            gender=json['gender'],
-            role=json['role'],
-            password_hash = json['password']
-        )
+        json = request.get_json()
+        if not json:
+            return {"message": "Request body is empty."}, 400
 
-        db.session.add(user)
-        db.session.commit()
-        return user.to_dict(), 201
+        # Validate required fields
+        required_fields = ['username', 'fullname', 'age', 'gender', 'role', 'password']
+        for field in required_fields:
+            if field not in json or not json[field]:
+                return {"message": f"Field '{field}' is required."}, 400
+
+        # Check if the username already exists
+        existing_user = User.query.filter_by(username=json['username']).first()
+        if existing_user:
+            return {"message": "Username already exists."}, 500
+        
+        try:
+            user = User(
+                username=json['username'],
+                fullname=json['fullname'],
+                age=json['age'],
+                gender=json['gender'],
+                role=json['role'],
+                password_hash=json['password']
+            )
+
+            db.session.add(user)
+            db.session.commit()
+            return user.to_dict(), 201
+
+        except IntegrityError as e:
+            db.session.rollback()
+            return {"message": "Username already exists."}, 409
+
+        except Exception as e:
+            db.session.rollback()
+            return {"message": str(e)}, 500
 
 class Login(Resource):
             
@@ -77,7 +101,6 @@ class CheckSession(Resource):
             user=User.query.filter(User.id==user_id).first()
             return user.to_dict(),200
         return {}, 401
-
 
 class Accounts(Resource):
     def get(self, student_id):
@@ -187,6 +210,42 @@ class Jobs(Resource):
         
         return make_response(jsonify(jobs),200)
 
+class ResetPassword(Resource):
+    
+    def patch(self):
+        # Get JSON data from request
+        json_data = request.get_json()
+
+        # Validate JSON data
+        if not json_data:
+            return {"message": "Request body is empty."}, 400
+
+        # Validate required fields
+        required_fields = ["username", "newPassword", "confirmNewPassword"]
+        for field in required_fields:
+            if field not in json_data or not json_data[field]:
+                return {"message": f"Field '{field}' is required."}, 400
+
+        
+        # Check if new password matches confirm new password
+        if json_data["newPassword"] != json_data["confirmNewPassword"]:
+            return {"message": "New password and confirm new password do not match."}, 400
+        
+        # Query the database for the user with the provided username
+        user = User.query.filter_by(username=json_data["username"]).first()
+
+        # Check if the user exists
+        if not user:
+            return {"message": "User not found."}, 404
+
+        try:
+            user.password_hash = json_data["newPassword"]
+            db.session.commit()
+            return {"message": "Password reset successfully."}, 200
+        except IntegrityError:
+            db.session.rollback()
+            return {"message": "Failed to reset password."}, 500
+
 api.add_resource(Login, '/login', endpoint='login')
 api.add_resource(Signup, '/signup', endpoint='signup')
 api.add_resource(CheckSession, '/check_session', endpoint='check_session')
@@ -197,6 +256,7 @@ api.add_resource(Departments, "/departments/<int:department_id>", endpoint="depa
 api.add_resource(Logout, '/logout', endpoint='logout')
 api.add_resource(Users, '/users', endpoint='users')
 api.add_resource(Jobs, '/jobs', endpoint='jobs')
+api.add_resource(ResetPassword, '/reset_password', endpoint='reset_password')
 
 
 
