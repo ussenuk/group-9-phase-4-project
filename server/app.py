@@ -4,8 +4,10 @@ from flask import request, session, jsonify, make_response
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 
+# from werkzeug.security import generate_password_hash
+
 from config import app, db, api
-from models import User, Department, Accounting, UserDepartment, Salary
+from models import User, Department, Accounting, UserDepartment, Salary, Job
 
 
 @app.route("/")
@@ -18,11 +20,41 @@ class Signup(Resource):
 
     def post(self):
         json = request.get_json()
-        user = User(username=json["username"], password_hash=json["password"])
+        if not json:
+            return {"message": "Request body is empty."}, 400
 
-        db.session.add(user)
-        db.session.commit()
-        return user.to_dict(), 201
+        # Validate required fields
+        required_fields = ["username", "fullname", "age", "gender", "role", "password"]
+        for field in required_fields:
+            if field not in json or not json[field]:
+                return {"message": f"Field '{field}' is required."}, 400
+
+        # Check if the username already exists
+        existing_user = User.query.filter_by(username=json["username"]).first()
+        if existing_user:
+            return {"message": "Username already exists."}, 500
+
+        try:
+            user = User(
+                username=json["username"],
+                fullname=json["fullname"],
+                age=json["age"],
+                gender=json["gender"],
+                role=json["role"],
+                password_hash=json["password"],
+            )
+
+            db.session.add(user)
+            db.session.commit()
+            return user.to_dict(), 201
+
+        except IntegrityError as e:
+            db.session.rollback()
+            return {"message": "Username already exists."}, 409
+
+        except Exception as e:
+            db.session.rollback()
+            return {"message": str(e)}, 500
 
 
 class Login(Resource):
@@ -59,11 +91,11 @@ class Login(Resource):
         return {"message": "Invalid username or password."}, 401
 
 
-# class Logout(Resource):
+class Logout(Resource):
 
-#     def delete(self):
-#         session['user_id']=None
-#         return {},204
+    def delete(self):
+        session["user_id"] = None
+        return {}, 204
 
 
 class CheckSession(Resource):
@@ -218,16 +250,93 @@ class AllDepartments(Resource):
         return jsonify(departments_list)
 
 
+class Users(Resource):
+    def get(self):
+        users = []
+        for user in User.query.all():
+            user_dict = {
+                "id": user.id,
+                "username": user.username,
+                "fullname": user.fullname,
+                "age": user.age,
+                "gender": user.gender,
+                "role": user.role,
+                "bio": user.bio,
+            }
+
+            users.append(user_dict)
+
+        return make_response(jsonify(users), 200)
+
+
+class Jobs(Resource):
+    def get(self):
+        jobs = []
+        for job in Job.query.all():
+            job_dict = {
+                "id": job.id,
+                "title": job.title,
+                "level": job.level,
+                "description": job.description,
+                "requirements": job.requirements,
+            }
+
+            jobs.append(job_dict)
+
+        return make_response(jsonify(jobs), 200)
+
+
+class ResetPassword(Resource):
+
+    def patch(self):
+        # Get JSON data from request
+        json_data = request.get_json()
+
+        # Validate JSON data
+        if not json_data:
+            return {"message": "Request body is empty."}, 400
+
+        # Validate required fields
+        required_fields = ["username", "newPassword", "confirmNewPassword"]
+        for field in required_fields:
+            if field not in json_data or not json_data[field]:
+                return {"message": f"Field '{field}' is required."}, 400
+
+        # Check if new password matches confirm new password
+        if json_data["newPassword"] != json_data["confirmNewPassword"]:
+            return {
+                "message": "New password and confirm new password do not match."
+            }, 400
+
+        # Query the database for the user with the provided username
+        user = User.query.filter_by(username=json_data["username"]).first()
+
+        # Check if the user exists
+        if not user:
+            return {"message": "User not found."}, 404
+
+        try:
+            user.password_hash = json_data["newPassword"]
+            db.session.commit()
+            return {"message": "Password reset successfully."}, 200
+        except IntegrityError:
+            db.session.rollback()
+            return {"message": "Failed to reset password."}, 500
+
+
 api.add_resource(Login, "/login", endpoint="login")
 api.add_resource(Signup, "/signup", endpoint="signup")
 api.add_resource(CheckSession, "/check_session", endpoint="check_session")
 api.add_resource(Accounts, "/accounts", endpoint="accounts")
 api.add_resource(AccountingReport, "/accounting_report", endpoint="accounting_report")
 api.add_resource(Salaries, "/salaries", endpoint="salaries")
-api.add_resource(Departments, "/department/<int:department_id>", endpoint="department")
+# api.add_resource(Departments, "/departments/<int:department_id>", endpoint="department")
+api.add_resource(Logout, "/logout", endpoint="logout")
+api.add_resource(Users, "/users", endpoint="users")
+api.add_resource(Jobs, "/jobs", endpoint="jobs")
+api.add_resource(ResetPassword, "/reset_password", endpoint="reset_password")
 api.add_resource(AllDepartments, "/departments", endpoint="departments")
 api.add_resource(Admin, "/admin", endpoint="admin")
-# api.add_resource(Logout, '/logout', endpoint='logout')
 
 
 if __name__ == "__main__":
