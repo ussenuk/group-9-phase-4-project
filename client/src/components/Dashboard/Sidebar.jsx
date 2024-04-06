@@ -68,7 +68,7 @@ const Sidebar = ({ onLogout }) => {
           Salaries
         </NavLink>
 
-        </a>
+        
         <div className="item">
           <BiGroup className="icon" />
           <Link to="/UsersList">List of Active Users</Link>
