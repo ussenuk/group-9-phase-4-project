@@ -1,5 +1,10 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+
+
+import { Link, NavLink } from "react-router-dom";
+
+import { useNavigate } from "react-router-dom";
+
 
 import {
   BiHome,
@@ -8,6 +13,11 @@ import {
   BiStats,
   BiTask,
   BiHelpCircle,
+
+  BiSolidCreditCardFront,
+  BiSolidLandmark,
+  BiSolidArch ,
+
   BiGroup
 } from "react-icons/bi";
 
@@ -34,7 +44,31 @@ const Sidebar = ({ onLogout }) => {
         <a href="#" className="item active">
           <BiHome className="icon" />
           Dashboard
+
         </a>
+        <a href="#" className="item">
+          <BiTask className="icon" />
+          Assigment
+        </a>
+        {/* Links to sub-pages */}
+        <NavLink to="/admin" className="item">
+          <BiSolidArch className="icon" />
+          Admin
+        </NavLink>
+        <NavLink to="/studentinfo" className="item">
+          <BiStats className="icon" />
+          Accounting
+        </NavLink>
+        <NavLink to="/departments" className="item">
+          <BiSolidLandmark className="icon" />
+          Departments
+        </NavLink>
+        <NavLink to="/accounting-records" className="item">
+          <BiSolidCreditCardFront className="icon" />
+          Salaries
+        </NavLink>
+
+        
         <div className="item">
           <BiGroup className="icon" />
           <Link to="/UsersList">List of Active Users</Link>
@@ -48,6 +82,7 @@ const Sidebar = ({ onLogout }) => {
           <BiStats className="icon" />
           Accounting
         </a>
+
         <a href="#" className="item">
           <BiSolidReport className="icon" />
           Report
@@ -57,6 +92,8 @@ const Sidebar = ({ onLogout }) => {
           <BiHelpCircle className="icon" />
           Help
         </a>
+
+
         <>
           <button
             onClick={handleLogout}
@@ -70,6 +107,7 @@ const Sidebar = ({ onLogout }) => {
             Logout
           </button>
         </>
+
       </div>
     </div>
   );

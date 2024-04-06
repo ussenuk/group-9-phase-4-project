@@ -18,6 +18,13 @@ import Highschool from "./components/HSCHOOL/secondary.jsx";
 import DonationPage from "./components/donate/donate.jsx";
 import ScholarshipPage from "./components/scholarship/scholarship.jsx";
 import AdmissionPage from "./components/admissions/admissions.jsx";
+
+// import JobsList from "./components/Jobs/Jobs.jsx";
+import AccountingRecords from "./components/Dashboard/Accounts/AccountRecords.jsx";
+import Admin from "./components/Dashboard/Accounts/admin.jsx";
+import Department from "./components/Dashboard/Accounts/Department.jsx";
+import StudentInfo from "./components/Dashboard/Accounts/StudentInfo.jsx";
+
 import News from "./components/Registration/News.jsx";
 import StudentRegistration from "./components/Registration/StudentRegistration.jsx";
 import Dashboard from "./components/Dashboard/Dashboard.jsx";
@@ -66,14 +73,26 @@ function Main() {
         <Route path="admissions" element={<AdmissionPage />} />
         <Route
           path="dashboard"
-          element={<Dashboard onLogin={handleLogin} onLogout={handleLogout} user={user}/>}
+          element={
+            <Dashboard
+              onLogin={handleLogin}
+              onLogout={handleLogout}
+              user={user}
+            />
+          }
         />
         <Route path="/UsersList" element={<UsersList />} />
-        <Route path="login" element={<Login onLogin={handleLogin} user={user} />} />
+        <Route
+          path="login"
+          element={<Login onLogin={handleLogin} user={user} />}
+        />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/user-registration" element={<UserRegistration />} />        
+        <Route path="/user-registration" element={<UserRegistration />} />
         <Route path="job" element={<Jobs />} />
-
+        <Route path="accounting-records" element={<AccountingRecords />} />
+        <Route path="admin" element={<Admin />} />
+        <Route path="departments" element={<Department />} />
+        <Route path="studentinfo" element={<StudentInfo />} />
       </Route>
     )
   );
@@ -84,5 +103,11 @@ function Main() {
     </React.StrictMode>
   );
 }
+
+// ReactDOM.createRoot(document.getElementById("root")).render(
+//   <React.StrictMode>
+//     <RouterProvider router={router} />
+//   </React.StrictMode>
+// );
 
 ReactDOM.createRoot(document.getElementById("root")).render(<Main />);
