@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 
 from flask import request, session, jsonify, make_response
+
+
+
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 
 from config import app, db, api
-from models import User, Department, Accounting, UserDepartment, Salary
+from models import User, Department, Accounting, UserDepartment, Salary, Job
 
 
 @app.route("/")
@@ -17,13 +20,24 @@ def home():
 class Signup(Resource):
 
     def post(self):
+
         json = request.get_json()
         user = User(username=json["username"], password_hash=json["password"])
+
+        json= request.get_json()
+        user = User(
+            username=json['username'],
+            fullname=json['fullname'],
+            age=json['age'],
+            gender=json['gender'],
+            role=json['role'],
+            password_hash = json['password']
+        )
+
 
         db.session.add(user)
         db.session.commit()
         return user.to_dict(), 201
-
 
 class Login(Resource):
 
@@ -59,11 +73,18 @@ class Login(Resource):
         return {"message": "Invalid username or password."}, 401
 
 
+
 # class Logout(Resource):
 
 #     def delete(self):
 #         session['user_id']=None
 #         return {},204
+    
+class Logout(Resource):
+    
+    def delete(self):
+        session['user_id']=None
+        return {},204
 
 
 class CheckSession(Resource):
@@ -202,6 +223,39 @@ class Departments(Resource):
         else:
             return {"error": "UserDepartment not found"}, 404
 
+class Users(Resource):
+    def get(self):
+        users=[]
+        for user in User.query.all():
+            user_dict={
+                "id": user.id,
+                "username": user.username,
+                "fullname": user.fullname,
+                "age": user.age,
+                "gender": user.gender,
+                "role": user.role,
+                "bio": user.bio,
+            }
+            
+            users.append(user_dict)
+        
+        return make_response(jsonify(users),200)
+
+class Jobs(Resource):
+    def get(self):
+        jobs=[]
+        for job in Job.query.all(): 
+            job_dict={
+                "id": job.id,
+                "title": job.title,
+                "level": job.level,
+                "description": job.description,
+                "requirements": job.requirements,
+            }
+            
+            jobs.append(job_dict)
+        
+        return make_response(jsonify(jobs),200)
 
 class AllDepartments(Resource):
     def get(self):
@@ -228,6 +282,12 @@ api.add_resource(Departments, "/department/<int:department_id>", endpoint="depar
 api.add_resource(AllDepartments, "/departments", endpoint="departments")
 api.add_resource(Admin, "/admin", endpoint="admin")
 # api.add_resource(Logout, '/logout', endpoint='logout')
+
+api.add_resource(Logout, '/logout', endpoint='logout')
+api.add_resource(Users, '/users', endpoint='users')
+api.add_resource(Jobs, '/jobs', endpoint='jobs')
+
+
 
 
 if __name__ == "__main__":

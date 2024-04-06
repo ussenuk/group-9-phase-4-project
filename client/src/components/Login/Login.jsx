@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 
-export default function LoginForm({ onLogin }) {
+export default function LoginForm({ onLogin, user }) {
+
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   // const [username, setUsername] = useState("");
   const [refreshPage, setRefreshPage] = useState(false);
@@ -41,6 +43,8 @@ export default function LoginForm({ onLogin }) {
       })
       .then((user) => {
         onLogin(user);
+        navigate("/dashboard");
+
       })
       .catch((error) => {
         // Error handling

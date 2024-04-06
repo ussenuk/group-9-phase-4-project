@@ -1,6 +1,10 @@
 import React from "react";
 
+
 import { Link, NavLink } from "react-router-dom";
+
+import { useNavigate } from "react-router-dom";
+
 
 import {
   BiHome,
@@ -9,13 +13,27 @@ import {
   BiStats,
   BiTask,
   BiHelpCircle,
+
   BiSolidCreditCardFront,
   BiSolidLandmark,
-  BiSolidArch 
+  BiSolidArch ,
+
+  BiGroup
 } from "react-icons/bi";
 
 import "./sidebar.css";
-const Sidebar = () => {
+const Sidebar = ({ onLogout }) => {
+  const navigate = useNavigate();
+
+  function handleLogout() {
+    fetch("http://127.0.0.1:5555/logout", {
+      method: "DELETE",
+    }).then(() => {
+      onLogout();
+      navigate("/");
+    });
+  }
+
   return (
     <div className="menu">
       <div className="logo">
@@ -26,6 +44,7 @@ const Sidebar = () => {
         <a href="#" className="item active">
           <BiHome className="icon" />
           Dashboard
+
         </a>
         <a href="#" className="item">
           <BiTask className="icon" />
@@ -48,6 +67,22 @@ const Sidebar = () => {
           <BiSolidCreditCardFront className="icon" />
           Salaries
         </NavLink>
+
+        </a>
+        <div className="item">
+          <BiGroup className="icon" />
+          <Link to="/UsersList">List of Active Users</Link>
+        </div>
+
+        <a href="#" className="item">
+          <BiTask className="icon" />
+          Assigment
+        </a>
+        <a href="#" className="item">
+          <BiStats className="icon" />
+          Accounting
+        </a>
+
         <a href="#" className="item">
           <BiSolidReport className="icon" />
           Report
@@ -57,6 +92,22 @@ const Sidebar = () => {
           <BiHelpCircle className="icon" />
           Help
         </a>
+
+
+        <>
+          <button
+            onClick={handleLogout}
+            style={{
+              marginTop: "10px",
+              marginRight: "5px",
+              marginLeft: "5px",
+              border: "0.5px solid #111111",
+            }}
+          >
+            Logout
+          </button>
+        </>
+
       </div>
     </div>
   );
