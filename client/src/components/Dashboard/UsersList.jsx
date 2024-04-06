@@ -18,7 +18,7 @@ function UsersList() {
         <h2><strong><u>LIST OF ALL USERS</u></strong></h2>
         </div>
         
-        <table style={{ borderCollapse: "collapse", width: "100%" }}>
+        <table style={{ borderCollapse: "collapse", width: "90%" }}>
           <thead>
             <tr style={{ borderBottom: "1px solid #ddd" }}>
               <th style={{ border: "1px solid #ddd", padding: "7px" }}>USER ID</th>

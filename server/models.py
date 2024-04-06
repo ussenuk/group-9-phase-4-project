@@ -154,3 +154,12 @@ class UserDepartment(db.Model, SerializerMixin):
 
     # add serialization
     serialize_rules = ('-user.user_departments','-department.user_departments')
+    
+class Job(db.Model, SerializerMixin):
+    __tablename__ = 'jobs'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    title=db.Column(db.String)
+    level = db.Column(db.String)
+    description = db.Column(db.String)
+    requirements = db.Column(db.String)
