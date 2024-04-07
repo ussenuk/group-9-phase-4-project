@@ -58,10 +58,16 @@ export default function ResetPassword() {
 
   return (
     <div className="login-form-container">
-      <h2>Reset Password</h2>
+      <h2>
+        <strong>
+          <u>Reset Password</u>
+        </strong>
+      </h2>
       <form onSubmit={formik.handleSubmit}>
         <div className="form-group">
-          <label htmlFor="username" className="form-label">Username:</label>
+          <label htmlFor="username" className="form-label">
+            Username:
+          </label>
           <input
             id="username"
             name="username"
@@ -71,13 +77,16 @@ export default function ResetPassword() {
             value={formik.values.username}
             className="form-input"
           />
-          {formik.touched.username && formik.errors.username ? (
-            <div className="error-message">{formik.errors.username}</div>
-          ) : null}
+          
         </div>
+        {formik.touched.username && formik.errors.username ? (
+          <div className="error-message">{formik.errors.username}</div>
+        ) : null}
 
         <div className="form-group">
-          <label htmlFor="newPassword" className="form-label">New Password:</label>
+          <label htmlFor="newPassword" className="form-label">
+            New Password:
+          </label>
           <input
             id="newPassword"
             name="newPassword"
@@ -87,13 +96,14 @@ export default function ResetPassword() {
             value={formik.values.newPassword}
             className="form-input"
           />
-          {formik.touched.newPassword && formik.errors.newPassword ? (
-            <div className="error-message">{formik.errors.newPassword}</div>
-          ) : null}
         </div>
-
+        {formik.touched.newPassword && formik.errors.newPassword ? (
+          <div className="error-message">{formik.errors.newPassword}</div>
+        ) : null}
         <div className="form-group">
-          <label htmlFor="confirmNewPassword" className="form-label">Confirm New Password:</label>
+          <label htmlFor="confirmNewPassword" className="form-label">
+            Confirm New Password:
+          </label>
           <input
             id="confirmNewPassword"
             name="confirmNewPassword"
@@ -103,16 +113,24 @@ export default function ResetPassword() {
             value={formik.values.confirmNewPassword}
             className="form-input"
           />
-          {formik.touched.confirmNewPassword &&
-          formik.errors.confirmNewPassword ? (
-            <div className="error-message">{formik.errors.confirmNewPassword}</div>
-          ) : null}
+          
         </div>
+        {formik.touched.confirmNewPassword &&
+          formik.errors.confirmNewPassword ? (
+            <div className="error-message">
+              {formik.errors.confirmNewPassword}
+            </div>
+          ) : null}
 
         {resetError && <div>{resetError}</div>}
         {resetSuccess && <div>Password reset successfully!</div>}
 
-        <button type="submit" className="reset-password-button">Reset Password</button>
+        <button
+          type="submit"
+          className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out"
+        >
+          Reset Password
+        </button>
       </form>
     </div>
   );

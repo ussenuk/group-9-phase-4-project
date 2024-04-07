@@ -9,7 +9,6 @@ from sqlalchemy.exc import IntegrityError
 from config import app, db, api
 from models import User, Department, Accounting, UserDepartment, Salary, Job
 
-
 @app.route("/")
 def home():
     return "Welcome to my API."
