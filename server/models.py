@@ -107,10 +107,10 @@ class Accounting(db.Model, SerializerMixin):
 
     # add the foreign key
 
-    student_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    student_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete='CASCADE'))
 
     # Relationship with User table (one-to-one)
-
+    student = db.relationship("User", backref="accounting_records", cascade="all, delete-orphan", single_parent=True)
     # user_accounting = db.relationship("User", backref="accountings")
 
     def __repr__(self):
@@ -126,7 +126,7 @@ class Salary(db.Model, SerializerMixin):
     description = db.Column(db.String(255)) # Optional: For bonuses, adjustments,etc.
 
 
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False) #Foreign key to users table
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), ) #Foreign key to users table
 
     # Relationship with User table (many-to-one)
 

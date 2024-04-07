@@ -3,10 +3,11 @@
 from flask import request, session, jsonify, make_response
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
+from flask_cors import CORS
 
 # from werkzeug.security import generate_password_hash
 
-from config import app, db, api
+from config import app, db, api, cors
 from models import User, Department, Accounting, UserDepartment, Salary, Job
 
 
@@ -131,71 +132,94 @@ class Accounts(Resource):
 class AccountingReport(Resource):
     def get(self):
 
-        if session.get("user_id") == 20:
+        accounting_records = Accounting.query.all()
 
-            accounting_records = Accounting.query.all()
+        accounting_report = []
+        for record in accounting_records:
+            accounting_report.append(
+                {
+                    "student_id": record.student_id,
+                    "name": record.account_name,
+                    "fee_status": record.accounting_status_perterm,
+                    "paid": record.amount_paid,
+                    "balance": record.balance,
+                }
+            )
 
-            accounting_report = []
-            for record in accounting_records:
-                accounting_report.append(
-                    {
-                        "student_id": record.student_id,
-                        "name": record.account_name,
-                        "fee_status": record.accounting_status_perterm,
-                        "paid": record.amount_paid,
-                        "balance": record.balance,
-                    }
-                )
-
-            return make_response(jsonify(accounting_report), 200)
-        else:
-            return {"error": "Unauthorized access"}, 403
+        return make_response(jsonify(accounting_report), 200)
 
 
 ###### admin
 class Admin(Resource):
 
-    def delete(self, user_id):
-        current_user_id = session.get("user_id")
-        if current_user_id == 20:
-            entity = User.query.filter_by(id=user_id).first()
-            if entity:
-                if entity.role == "teacher" or entity.role == "student":
-                    db.session.delete(entity)
-                    db.session.commit()
-                    return {
-                        "message": f"{entity.role.capitalize()} deleted successfully"
-                    }, 200
-                else:
-                    return {
-                        "error": "Invalid role. Only 'teacher' or 'student' can be deleted"
-                    }, 400
-            else:
-                return {"error": "User not found"}, 404
-        else:
-            return {"error": "Unauthorized access"}, 403
+    # def get(self):
+    #     current_user_role = session.get("role")
 
-    def post(self):
-        current_user_id = session.get("user_id")
-        if current_user_id == 20:
-            try:
-                new_teacher = User(
-                    username=request.json["username"],
-                    fullname=request.json["fullname"],
-                    age=int(request.json["age"]),
-                    gender=request.json["gender"],
-                    bio=request.json["bio"],
-                    image_url=request.json["image_url"],
-                )
-                db.session.add(new_teacher)
+    #     users = User.query.filter(User.role != "admin").all()
+    #     users_list = []
+    #     for user in users:
+    #         user_dict = {
+    #             "id": user.id,
+    #             "username": user.username,
+    #             "fullname": user.fullname,
+    #             "age": user.age,
+    #             "gender": user.gender,
+    #             "role": user.role,
+    #             "bio": user.bio,
+    #         }
+
+    #         users_list.append(user_dict)
+
+    #     return make_response(jsonify(users_list), 200)
+
+    def delete(self, user_id):
+        current_user_role = session.get("role")
+
+        entity = User.query.filter_by(id=user_id).first()
+        if entity:
+            if entity.role == "teacher" or entity.role == "student":
+                salaries = Salary.query.filter_by(user_id=user_id).all()
+                accountings = Accounting.query.filter_by(student_id=user_id).all()
+                if salaries:
+                    for salary in salaries:
+                        db.session.delete(salary)
+                if accountings:
+                    for accounting in accountings:
+                        db.session.delete(accounting)
+                db.session.delete(entity)
                 db.session.commit()
-                return {"message": "Teacher added successfully"}, 201
-            except KeyError as e:
-                return {"error": f"Missing required field: {e}"}, 400
-            except Exception as e:
-                return {"error": str(e)}, 500
+                return {
+                    "message": f"{entity.role.capitalize()} deleted successfully"
+                }, 200
+            else:
+                return {
+                    "error": "Invalid role. Only 'teacher' or 'student' can be deleted"
+                }, 400
         else:
-            return {"error": "Unauthorized access"}, 403
+            return {"error": "User not found"}, 404
+
+    # def post(self):
+    #     current_user_role = session.get("role")
+    #     if current_user_role == "teacher":
+    #         try:
+    #             new_teacher = User(
+    #                 username=request.json["username"],
+    #                 fullname=request.json["fullname"],
+    #                 age=int(request.json["age"]),
+    #                 gender=request.json["gender"],
+    #                 bio=request.json["bio"],
+    #                 image_url=request.json["image_url"],
+    #                 role="teacher"  # Ensure the role is set to "teacher"
+    #             )
+    #             db.session.add(new_teacher)
+    #             db.session.commit()
+    #             return {"message": "Teacher added successfully"}, 201
+    #         except KeyError as e:
+    #             return {"error": f"Missing required field: {e}"}, 400
+    #         except Exception as e:
+    #             return {"error": str(e)}, 500
+    #     else:
+    #         return {"error": "Unauthorized access"}, 403
 
 
 # #########
@@ -336,7 +360,7 @@ api.add_resource(Users, "/users", endpoint="users")
 api.add_resource(Jobs, "/jobs", endpoint="jobs")
 api.add_resource(ResetPassword, "/reset_password", endpoint="reset_password")
 api.add_resource(AllDepartments, "/departments", endpoint="departments")
-api.add_resource(Admin, "/admin", endpoint="admin")
+api.add_resource(Admin, "/admin/<int:user_id>", endpoint="admin")
 
 
 if __name__ == "__main__":
