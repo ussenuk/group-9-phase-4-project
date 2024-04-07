@@ -62,7 +62,7 @@ Student: can see his result, can see his courses and can also his financial stat
 
 ### Relationships
 
-![Alt text](https://drive.google.com/file/d/1rEmMa2TpAs8f9OzIWvsHWnIh0JFQhulG/view?usp=sharing)
+![Our school management database](School_management.png)
 
 A User(students or teachers) has many Department  through UserDepartment         (dont forget constraints)
 
