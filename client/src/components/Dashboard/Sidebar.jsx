@@ -73,7 +73,8 @@ const Sidebar = ({ onLogout }) => {
           <BiGroup className="icon" />
           <Link to="/UsersList">List of Active Users</Link>
         </div>
-   
+        
+      
         <NavLink to="/reports" className="item">
         <BiSolidReport className="icon" />
         Report
