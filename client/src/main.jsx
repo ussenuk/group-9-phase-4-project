@@ -34,6 +34,7 @@ import Login from "./components/Login/Login.jsx";
 import ResetPassword from "./components/Login/ResetPassword.jsx";
 import UserRegistration from "./components/Login/UserRegistration.jsx";
 import Jobs from "./components/Jobs/Jobs.jsx";
+import Report from "./components/Dashboard/Report/Report.jsx";
 
 function Main() {
   const [user, setUser] = useState(null);
@@ -93,6 +94,7 @@ function Main() {
         <Route path="admin" element={<Admin />} />
         <Route path="departments" element={<Department />} />
         <Route path="studentinfo" element={<StudentInfo />} />
+        <Route path="reports" element={<Report />} />
       </Route>
     )
   );

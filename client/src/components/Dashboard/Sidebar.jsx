@@ -73,17 +73,11 @@ const Sidebar = ({ onLogout }) => {
           <BiGroup className="icon" />
           <Link to="/UsersList">List of Active Users</Link>
         </div>
-
-        <a href="#" className="item">
-          <BiTask className="icon" />
-          Assigment
-        </a>
-        
-
-        <a href="#" className="item">
-          <BiSolidReport className="icon" />
-          Report
-        </a>
+   
+        <NavLink to="/reports" className="item">
+        <BiSolidReport className="icon" />
+        Report
+        </NavLink>
 
         <a href="#" className="item">
           <BiHelpCircle className="icon" />
