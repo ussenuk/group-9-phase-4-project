@@ -63,7 +63,7 @@ const Profile = ({user}) => {
     </div>
   );
 }else{
-  return null;
+  return (<h1>User not logged in. Please log in...</h1>);
 }
 };
 

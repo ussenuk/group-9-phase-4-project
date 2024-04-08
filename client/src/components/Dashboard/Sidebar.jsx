@@ -80,12 +80,7 @@ const Sidebar = ({ onLogout }) => {
         <>
           <button
             onClick={handleLogout}
-            style={{
-              marginTop: "10px",
-              marginRight: "5px",
-              marginLeft: "5px",
-              border: "0.5px solid #111111",
-            }}
+            className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-0.5 px-4 rounded-md shadow-md transition duration-300 ease-in-out"
           >
             Logout
           </button>
