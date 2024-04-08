@@ -107,10 +107,10 @@ class Accounting(db.Model, SerializerMixin):
 
     # add the foreign key
 
-    student_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    student_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete='CASCADE'))
 
     # Relationship with User table (one-to-one)
-
+    student = db.relationship("User", backref="accounting_records", cascade="all, delete-orphan", single_parent=True)
     # user_accounting = db.relationship("User", backref="accountings")
 
     def __repr__(self):
@@ -126,7 +126,7 @@ class Salary(db.Model, SerializerMixin):
     description = db.Column(db.String(255)) # Optional: For bonuses, adjustments,etc.
 
 
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False) #Foreign key to users table
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), ) #Foreign key to users table
 
     # Relationship with User table (many-to-one)
 
@@ -163,3 +163,16 @@ class Job(db.Model, SerializerMixin):
     level = db.Column(db.String)
     description = db.Column(db.String)
     requirements = db.Column(db.String)
+
+class Registration(db.Model, SerializerMixin):
+    __tablename__ = 'registrations'
+
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String)
+    last_name = db.Column(db.String)
+    father_fname = db.Column(db.String)
+    father_lname = db.Column(db.String)
+    mother_fname = db.Column(db.String)
+    mother_lname = db.Column(db.String)
+    adress = db.Column(db.String)
+    grade = db.Column(db.String)

@@ -1,9 +1,45 @@
-import React from "react";
+import React,{ useState } from "react";
 
 const StudentRegistration = () => {
+  const [student, setStudent] = useState([]);
+  const [first_name, setfname] = useState("");
+  const [last_name, setlname] = useState("");
+  const [father_lname, setflname] = useState("");
+  const [father_fname, setffname] = useState("");
+  const [mother_fname, setmfname] = useState("");
+  const [mother_lname, setmlname] = useState("");
+  const [adress, setAdress] = useState("");
+  const [grade, setGrade] = useState("");
+
+  
+  const [registerSuccess, setRegisterSuccess] = useState(false);
+
   const handleSubmit = (event) => {
     event.preventDefault();
-  };
+    fetch("http://127.0.0.1:5555/registrations", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        first_name,
+        last_name,
+        father_fname,
+        father_lname,
+        mother_fname,
+        mother_lname,
+        adress,
+        grade
+      }),
+    }).then((r) => {
+      if (r.ok) {
+        r.json().then((student) => {
+          setStudent(student);
+          setRegisterSuccess(true);
+        });
+      }
+    });
+  }
 
   return (
     <div className="max-w-lg mx-auto">
