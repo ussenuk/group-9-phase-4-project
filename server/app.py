@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from flask_cors import CORS
 
 from config import app, db, api, cors
-from models import User, Department, Accounting, UserDepartment, Salary, Job
+from models import User, Department, Accounting, UserDepartment, Salary, Job, Registration
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -297,6 +297,65 @@ class Jobs(Resource):
 
         return make_response(jsonify(jobs), 200)
 
+class Registrations(Resource):
+    def get(self):
+        registrations = []
+        for registration in Registration.query.all():
+            registration_dict = {
+                "id": registration.id,
+                "first_name": registration.first_name,
+                "last_name": registration.last_name,
+                "father_fname": registration.father_fname,
+                "father_lname": registration.father_lname,
+                "mother_fname": registration.mother_fname,
+                "mother_lname": registration.mother_lname,
+                "adress": registration.adress,
+                "grade": registration.grade
+            }
+
+            registrations.append(registration_dict)
+
+        return make_response(jsonify(registrations), 200)
+    
+    def post(self):
+        json = request.get_json()
+        if not json:
+            return {"message": "Request body is empty."}, 400
+
+        # Validate required fields
+        required_fields = ["first_name", "last_name", "father_fname", "father_lname", "mother_fname", "mother_lname","adress","grade"]
+        for field in required_fields:
+            if field not in json or not json[field]:
+                return {"message": f"Field '{field}' is required."}, 400
+
+        # Check if the username already exists
+        existing_user = Registration.query.filter_by(first_name=json["first_name"]).first()
+        if existing_user:
+            return {"message": "Username already exists."}, 500
+
+        try:
+            student = Registration(
+                first_name=json["first_name"],
+                last_name=json["last_name"],
+                father_fname=json["father_fname"],
+                father_lname=json["father_lname"],
+                mother_fname=json["mother_fname"],
+                mother_lname=json["mother_lname"],
+                adress=json["adress"],
+                grade=json["grade"],
+            )
+
+            db.session.add(student)
+            db.session.commit()
+            return student.to_dict(), 201
+
+        except IntegrityError as e:
+            db.session.rollback()
+            return {"message": "Student already exists."}, 409
+
+        except Exception as e:
+            db.session.rollback()
+            return {"message": str(e)}, 500
 
 class ResetPassword(Resource):
 
@@ -349,6 +408,7 @@ api.add_resource(Jobs, "/jobs", endpoint="jobs")
 api.add_resource(ResetPassword, "/reset_password", endpoint="reset_password")
 api.add_resource(AllDepartments, "/departments", endpoint="departments")
 api.add_resource(Admin, "/admin/<int:user_id>", endpoint="admin")
+api.add_resource(Registrations, "/registrations", endpoint="registrations")
 
 
 if __name__ == "__main__":

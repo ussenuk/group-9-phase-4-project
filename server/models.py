@@ -149,3 +149,16 @@ class Job(db.Model, SerializerMixin):
     level = db.Column(db.String)
     description = db.Column(db.String)
     requirements = db.Column(db.String)
+
+class Registration(db.Model, SerializerMixin):
+    __tablename__ = 'registrations'
+
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String)
+    last_name = db.Column(db.String)
+    father_fname = db.Column(db.String)
+    father_lname = db.Column(db.String)
+    mother_fname = db.Column(db.String)
+    mother_lname = db.Column(db.String)
+    adress = db.Column(db.String)
+    grade = db.Column(db.String)
