@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-
+import os
 from flask import request, session, jsonify, make_response
 from flask_restful import Resource, reqparse
 from sqlalchemy.exc import IntegrityError
 from flask_cors import CORS
 
-# from werkzeug.security import generate_password_hash
-
 from config import app, db, api, cors
 from models import User, Department, Accounting, UserDepartment, Salary, Job
+from dotenv import load_dotenv
+load_dotenv()
 
 
 @app.route("/")
