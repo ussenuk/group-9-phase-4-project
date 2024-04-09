@@ -1,5 +1,14 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+} from "@mui/material";
 
 function Jobs() {
   const [jobs, setJobs] = useState([]);
@@ -11,47 +20,52 @@ function Jobs() {
   }, []);
 
   return (
-    
     <section style={{ display: "flex", justifyContent: "center" }}>
       <div>
-        <div style={{textAlign: "center"}}>
-        <h2><strong><u>LIST OF ALL JOBS</u></strong></h2>
+        <div style={{ textAlign: "center" }}>
+          <Typography variant="h5">
+            <strong>
+              <u>LIST OF ALL JOBS</u>
+            </strong>
+          </Typography>
         </div>
-        
-        <table style={{ borderCollapse: "collapse", width: "90%" }}>
-          <thead>
-            <tr style={{ borderBottom: "1px solid #ddd" }}>
-              <th style={{ border: "1px solid #ddd", padding: "7px" }}>JOB ID</th>
-              <th style={{ border: "1px solid #ddd", padding: "8px" }}>TITLE</th>
-              <th style={{ border: "1px solid #ddd", padding: "8px" }}>TEACHING LEVEL</th>
-              <th style={{ border: "1px solid #ddd", padding: "8px" }}>DESCRIPTION</th>
-              <th style={{ border: "1px solid #ddd", padding: "8px" }}>REQUIREMENTS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {jobs.map((job) => (
-              <tr key={job.id} style={{ borderBottom: "1px solid #ddd" }}>
-                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{job.id}</td>
-                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{job.title}</td>
-                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{job.level}</td>
-                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{job.description}</td>
-                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{job.requirements}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+
+        <TableContainer component={Paper} style={{ width: "90%" }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Job ID</TableCell>
+                <TableCell>Title</TableCell>
+                <TableCell>Teaching Level</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>Requirements</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {jobs.map((job) => (
+                <TableRow key={job.id}>
+                  <TableCell>{job.id}</TableCell>
+                  <TableCell>{job.title}</TableCell>
+                  <TableCell>{job.level}</TableCell>
+                  <TableCell>{job.description}</TableCell>
+                  <TableCell>{job.requirements}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
         <br />
-        <h4>
-        To apply for any of the above jobs, please send your current CV and
-        application letter to{" "}
-        <a href="mailto:hr@csk.edu" style={{ color: "blue" }}>
-          <u>hr@csk.edu</u>
-        </a>
-      </h4>
-      <br />
+        <Typography variant="h6">
+          To apply for any of the above jobs, please send your current CV and
+          application letter to{" "}
+          <a href="mailto:hr@csk.edu" style={{ color: "blue" }}>
+            <u>hr@csk.edu</u>
+          </a>
+        </Typography>
+        <br />
       </div>
     </section>
-
   );
 }
 
