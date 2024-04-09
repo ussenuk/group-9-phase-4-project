@@ -1,10 +1,8 @@
 import React from "react";
 
-
 import { Link, NavLink } from "react-router-dom";
 
 import { useNavigate } from "react-router-dom";
-
 
 import {
   BiHome,
@@ -13,12 +11,10 @@ import {
   BiStats,
   BiTask,
   BiHelpCircle,
-
   BiSolidCreditCardFront,
   BiSolidLandmark,
-  BiSolidArch ,
-
-  BiGroup
+  BiSolidArch,
+  BiGroup,
 } from "react-icons/bi";
 
 import "./sidebar.css";
@@ -44,8 +40,11 @@ const Sidebar = ({ onLogout }) => {
         <a href="#" className="item active">
           <BiHome className="icon" />
           Dashboard
-
         </a>
+        <div className="item">
+          <BiGroup className="icon" />
+          <Link to="/UsersList">List of Active Users</Link>
+        </div>
         <a href="#" className="item">
           <BiTask className="icon" />
           Assigment
@@ -68,6 +67,7 @@ const Sidebar = ({ onLogout }) => {
           Salaries
         </NavLink>
 
+<<<<<<< HEAD
         
         <div className="item">
           <BiGroup className="icon" />
@@ -75,9 +75,11 @@ const Sidebar = ({ onLogout }) => {
         </div>
         
       
+=======
+>>>>>>> main
         <NavLink to="/reports" className="item">
-        <BiSolidReport className="icon" />
-        Report
+          <BiSolidReport className="icon" />
+          Report
         </NavLink>
 
         <a href="#" className="item">
@@ -85,21 +87,14 @@ const Sidebar = ({ onLogout }) => {
           Help
         </a>
 
-
         <>
           <button
             onClick={handleLogout}
-            style={{
-              marginTop: "10px",
-              marginRight: "5px",
-              marginLeft: "5px",
-              border: "0.5px solid #111111",
-            }}
+            className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-0.5 px-4 rounded-md shadow-md transition duration-300 ease-in-out"
           >
             Logout
           </button>
         </>
-
       </div>
     </div>
   );

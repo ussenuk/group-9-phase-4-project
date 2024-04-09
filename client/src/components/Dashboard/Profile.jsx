@@ -38,8 +38,8 @@ const Profile = ({user}) => {
         <div className='user--profile'>
         <div className='user--detail'>
           <img src={userImage} alt="" />
-          <h3 className='username'> {user.username}</h3>
-          <span className='profession'>Teacher</span>
+          <h3 className='username'> <strong>Username</strong> : {user.fullname}</h3>
+          <span className='profession'><strong>Role</strong> : {user.role}</span>
         </div>
       
         <div className='user-classes'>
@@ -63,7 +63,7 @@ const Profile = ({user}) => {
     </div>
   );
 }else{
-  return null;
+  return (<h1>User not logged in. Please log in...</h1>);
 }
 };
 

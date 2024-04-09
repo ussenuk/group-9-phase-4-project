@@ -106,9 +106,8 @@ export default function LoginForm({ onLogin, user }) {
             onChange={formik.handleChange}
             className="form-input"
           />
-          <p className="error-message">{formik.errors.username}</p>
         </div>
-
+        <p className="error-message">{formik.errors.username}</p>
         <div className="form-group">
           <label htmlFor="password" className="form-label">
             Password:
@@ -121,9 +120,8 @@ export default function LoginForm({ onLogin, user }) {
             value={formik.values.password}
             className="form-input"
           />
-          <p className="error-message">{formik.errors.password}</p>
         </div>
-
+        <p className="error-message">{formik.errors.password}</p>
         <div style={{ marginTop: "10px", marginBottom: "10px" }}>
           <label>
             <input type="checkbox" name="rememberMe" />
@@ -132,7 +130,10 @@ export default function LoginForm({ onLogin, user }) {
         </div>
         {error && <p className="error-message">{error}</p>}{" "}
         <div className="button-group">
-          <button type="submit" className="submit-button">
+          <button
+            type="submit"
+            className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out"
+          >
             Login
           </button>
 

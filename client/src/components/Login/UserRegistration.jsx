@@ -60,7 +60,7 @@ export default function Registration({ onLogin, user }) {
   }
 
   const formSchema = yup.object().shape({
-    username: yup.string().required("Username is required"),
+    username: yup.string().required("Username is required").min(3, "Username must be at least 3 characters"),
     fullname: yup.string().required("Full Name is required"),
     age: yup.string().required("Age is required"),
     gender: yup.string().required("Gender is required"),
@@ -102,7 +102,7 @@ export default function Registration({ onLogin, user }) {
   });
 
   return (
-    <div className="login-form-container" style={{ margin: "50px" }}>
+    <div className="login-form-container" style={{ margin: "180px" }}>
       <h2>
         <strong>
           <u>New User Registration Form</u>
@@ -122,8 +122,9 @@ export default function Registration({ onLogin, user }) {
             onChange={formik.handleChange}
             className="form-input"
           />
-           <p className="error-message">{formik.errors.username}</p>
+           
         </div>
+        <p className="error-message">{formik.errors.username}</p>
         <div className="form-group">
           <label htmlFor="fullname" className="form-label">
             Full Name:
@@ -137,8 +138,9 @@ export default function Registration({ onLogin, user }) {
             onChange={formik.handleChange}
             className="form-input"
           />
-          <p className="error-message">{formik.errors.fullname}</p>
+          
         </div>
+        <p className="error-message">{formik.errors.fullname}</p>
         <div className="form-group">
           <label htmlFor="age" className="form-label">
             Age:
@@ -152,8 +154,9 @@ export default function Registration({ onLogin, user }) {
             onChange={formik.handleChange}
             className="form-input"
           />
-          <p className="error-message">{formik.errors.age}</p>
+          
         </div>
+        <p className="error-message">{formik.errors.age}</p>
         <div className="form-group">
           <label htmlFor="gender" className="form-label">
             Gender:
@@ -168,8 +171,9 @@ export default function Registration({ onLogin, user }) {
             onChange={formik.handleChange}
             className="form-input"
           />
-          <p className="error-message">{formik.errors.gender}</p>
+          
         </div>
+        <p className="error-message">{formik.errors.gender}</p>
         <div className="form-group">
           <label htmlFor="role" className="form-label">
             Role:
@@ -184,8 +188,9 @@ export default function Registration({ onLogin, user }) {
             onChange={formik.handleChange}
             className="form-input"
           />
-          <p className="error-message">{formik.errors.role}</p>
+          
         </div>
+        <p className="error-message">{formik.errors.role}</p>
         <div className="form-group">
           <label htmlFor="password" className="form-label">
             Password:
@@ -198,8 +203,9 @@ export default function Registration({ onLogin, user }) {
             value={formik.values.password}
             className="form-input"
           />
-          <p className="error-message">{formik.errors.password}</p>
+          
         </div>
+        <p className="error-message">{formik.errors.password}</p>
         <div className="form-group">
           <label htmlFor="confirm_password" className="form-label">
             Confirm Password:
@@ -212,15 +218,16 @@ export default function Registration({ onLogin, user }) {
             value={formik.values.confirm_password}
             className="form-input"
           />
-          <p className="error-message">{formik.errors.confirm_password}</p>
+          
         </div>
+        <p className="error-message">{formik.errors.confirm_password}</p>
         {error && <p className="error-message">{error}</p>}{" "}
-        
+        <br />
         <div>
           <button
             type="submit"
             // className="submit-button"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out w-full"
+            className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out"
           >
             Register
           </button>

@@ -35,6 +35,7 @@ import ResetPassword from "./components/Login/ResetPassword.jsx";
 import UserRegistration from "./components/Login/UserRegistration.jsx";
 import Jobs from "./components/Jobs/Jobs.jsx";
 import Report from "./components/Dashboard/Report/Report.jsx";
+import ContactUs from "./components/ContactUs/ContactUs.jsx";
 
 function Main() {
   const [user, setUser] = useState(null);
@@ -95,6 +96,7 @@ function Main() {
         <Route path="departments" element={<Department />} />
         <Route path="studentinfo" element={<StudentInfo />} />
         <Route path="reports" element={<Report />} />
+        <Route path="contact" element={<ContactUs />} />
       </Route>
     )
   );
