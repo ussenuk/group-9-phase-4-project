@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import os
 from flask import request, session, jsonify, make_response
-from flask_restful import Resource
+from flask_restful import Resource, reqparse
 from sqlalchemy.exc import IntegrityError
 from flask_cors import CORS
 
@@ -9,6 +9,7 @@ from config import app, db, api, cors
 from models import User, Department, Accounting, UserDepartment, Salary, Job
 from dotenv import load_dotenv
 load_dotenv()
+
 
 @app.route("/")
 def home():
@@ -151,28 +152,8 @@ class AccountingReport(Resource):
 ###### admin
 class Admin(Resource):
 
-    # def get(self):
-    #     current_user_role = session.get("role")
-
-    #     users = User.query.filter(User.role != "admin").all()
-    #     users_list = []
-    #     for user in users:
-    #         user_dict = {
-    #             "id": user.id,
-    #             "username": user.username,
-    #             "fullname": user.fullname,
-    #             "age": user.age,
-    #             "gender": user.gender,
-    #             "role": user.role,
-    #             "bio": user.bio,
-    #         }
-
-    #         users_list.append(user_dict)
-
-    #     return make_response(jsonify(users_list), 200)
-
     def delete(self, user_id):
-        current_user_role = session.get("role")
+        
 
         entity = User.query.filter_by(id=user_id).first()
         if entity:
@@ -197,28 +178,36 @@ class Admin(Resource):
         else:
             return {"error": "User not found"}, 404
 
-    # def post(self):
-    #     current_user_role = session.get("role")
-    #     if current_user_role == "teacher":
-    #         try:
-    #             new_teacher = User(
-    #                 username=request.json["username"],
-    #                 fullname=request.json["fullname"],
-    #                 age=int(request.json["age"]),
-    #                 gender=request.json["gender"],
-    #                 bio=request.json["bio"],
-    #                 image_url=request.json["image_url"],
-    #                 role="teacher"  # Ensure the role is set to "teacher"
-    #             )
-    #             db.session.add(new_teacher)
-    #             db.session.commit()
-    #             return {"message": "Teacher added successfully"}, 201
-    #         except KeyError as e:
-    #             return {"error": f"Missing required field: {e}"}, 400
-    #         except Exception as e:
-    #             return {"error": str(e)}, 500
-    #     else:
-    #         return {"error": "Unauthorized access"}, 403
+    def patch(self, user_id):
+  
+       def patch(self, user_id):
+  
+        entity = db.session.get(User, user_id)
+
+        if entity:
+            
+            if entity.role == "student":
+                
+                data = request.get_json()
+                if data:
+                    
+                    accounting = Accounting.query.filter_by(student_id=user_id).first()
+                    if accounting:
+                       
+                        for key, value in data.items():
+                            if key in ["account_name", "accounting_status_perterm", "amount_paid", "balance"]:
+                                setattr(accounting, key, value)
+                        db.session.commit()
+                        return accounting.to_dict(), 200
+                    else:
+                        return {"error": "No accounting record found for this student"}, 404
+                else:
+                    return {"error": "No data provided in the request"}, 400
+            else:
+                return {"error": "Only 'student' records can be edited"}, 400
+        else:
+            return {"error": "User not found"}, 404
+    # ...
 
 
 # #########

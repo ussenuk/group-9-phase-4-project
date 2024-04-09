@@ -21,13 +21,11 @@ class User(db.Model, SerializerMixin):
     role = db.Column(db.String(50)) # student, teacher, admin
 
     _password_hash = db.Column(db.String)
-
-
+    
     # Relationship with Accounting table (one-to-one)
-    accountings = db.relationship("Accounting", backref="user")
+    accountings = db.relationship("Accounting", back_populates="user")
 
     # Relationship with UserDepartment table (many-to-many)
-    user_departments = db.relationship('UserDepartment', backref='user')
     user_departments = db.relationship('UserDepartment', back_populates='user', cascade='all, delete-orphan')
 
     departments = association_proxy('user_departments', 'department', creator=lambda dp:UserDepartment(department=dp))
@@ -57,6 +55,7 @@ class User(db.Model, SerializerMixin):
             self._password_hash = password_hash.decode('utf-8')
         else:
             raise ValueError('Password cannot be empty')
+    
     def authenticate(self, password):
         return bcrypt.check_password_hash(
             self._password_hash, password.encode('utf-8'))
@@ -79,19 +78,13 @@ class Department(db.Model, SerializerMixin):
     name = db.Column(db.String(80))
     subject = db.Column(db.String(255)) # Optional field for department subject
 
-
-    # add relationship
-
-    user_departments =db.relationship('UserDepartment', backref='department')
-
+    # Relationship with UserDepartment table (many-to-many)
     user_departments = db.relationship('UserDepartment', back_populates='department', cascade='all, delete-orphan')
 
     users = association_proxy('user_departments', 'user', creator=lambda usr:UserDepartment(user=usr))
 
-
     # add serialization rules
     serialize_rules = ('-user_departments.department',)
-
 
     def __repr__(self):
         return f"<Department {self.name}>"
@@ -106,12 +99,10 @@ class Accounting(db.Model, SerializerMixin):
     balance = db.Column(db.Integer)
 
     # add the foreign key
-
     student_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete='CASCADE'))
 
     # Relationship with User table (one-to-one)
-    student = db.relationship("User", backref="accounting_records", cascade="all, delete-orphan", single_parent=True)
-    # user_accounting = db.relationship("User", backref="accountings")
+    user = db.relationship("User", back_populates="accountings")
 
     def __repr__(self):
         return f"<Accounting {self.account_name}>"
@@ -125,11 +116,9 @@ class Salary(db.Model, SerializerMixin):
     pay_date = db.Column(db.Date) # The date the salary was paid
     description = db.Column(db.String(255)) # Optional: For bonuses, adjustments,etc.
 
-
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), ) #Foreign key to users table
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id')) # Foreign key to users table
 
     # Relationship with User table (many-to-one)
-
     user = db.relationship('User', backref=db.backref('salaries', lazy=True))
 
     def __repr__(self):
@@ -142,14 +131,11 @@ class UserDepartment(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
 
     # add the foreign key
-
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     department_id = db.Column(db.Integer, db.ForeignKey('departments.id'))
 
     # add relationships
-
     user = db.relationship('User', back_populates='user_departments')
-
     department = db.relationship('Department', back_populates='user_departments')
 
     # add serialization

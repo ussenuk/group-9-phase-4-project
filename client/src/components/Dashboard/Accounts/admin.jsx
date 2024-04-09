@@ -8,6 +8,13 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Button from "@mui/material/Button";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import TextField from "@mui/material/TextField";
 
 export default function TeacherStudentTables() {
   const [teachers, setTeachers] = useState([]);
@@ -16,6 +23,8 @@ export default function TeacherStudentTables() {
   const [studentPage, setStudentPage] = useState(0);
   const [teacherRowsPerPage, setTeacherRowsPerPage] = useState(10);
   const [studentRowsPerPage, setStudentRowsPerPage] = useState(10);
+  const [open, setOpen] = useState(false);
+  const [editedStudent, setEditedStudent] = useState(null);
 
   useEffect(() => {
     const fetchTeachers = async () => {
@@ -73,7 +82,6 @@ export default function TeacherStudentTables() {
       console.error("Error deleting teacher:", error.message);
     }
   };
-  
 
   const handleStudentDelete = async (studentId) => {
     try {
@@ -93,111 +101,217 @@ export default function TeacherStudentTables() {
     }
   };
 
-  return (
-    <div>
-      <Paper sx={{ width: "100%", overflow: "hidden", marginBottom: "20px" }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
-          <Table stickyHeader aria-label="teacher table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Teacher ID</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Salary</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {teachers
-                .slice(
-                  teacherPage * teacherRowsPerPage,
-                  teacherPage * teacherRowsPerPage + teacherRowsPerPage
-                )
-                .map((teacher) => (
-                  <TableRow key={teacher.teacher_id}>
-                    <TableCell>{teacher.teacher_id}</TableCell>
-                    <TableCell>{teacher.teacher_name}</TableCell>
-                    <TableCell>{teacher.salary}</TableCell>
-                    <TableCell>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => handleTeacherDelete(teacher.teacher_id)}
-                      >
-                        Delete
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={teachers.length}
-          rowsPerPage={teacherRowsPerPage}
-          page={teacherPage}
-          onPageChange={(event, newPage) => setTeacherPage(newPage)}
-          onRowsPerPageChange={(event) => {
-            setTeacherRowsPerPage(+event.target.value);
-            setTeacherPage(0);
-          }}
-        />
-      </Paper>
+  const handleEdit = (student) => {
+    setEditedStudent(student);
+    setOpen(true);
+  };
 
-      <Paper sx={{ width: "100%", overflow: "hidden" }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
-          <Table stickyHeader aria-label="student table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Student ID</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Fee Status</TableCell>
-                <TableCell>Paid</TableCell>
-                <TableCell>Balance</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {students
-                .slice(
-                  studentPage * studentRowsPerPage,
-                  studentPage * studentRowsPerPage + studentRowsPerPage
+  const handleClose = () => {
+    setOpen(false);
+    setEditedStudent(null);
+  };
+
+  const handleSaveChanges = async () => {
+    try {
+        const response = await fetch(`http://127.0.0.1:5555/admin/${editedStudent.student_id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                account_name: editedStudent.account_name,
+                accounting_status_perterm: editedStudent.accounting_status_perterm,
+                amount_paid: editedStudent.amount_paid,
+                balance: editedStudent.balance,
+            }),
+        });
+
+        if (response.ok) {
+            alert("Changes saved successfully");
+            setOpen(false);
+            setEditedStudent(null);
+            setStudents((prevStudents) =>
+                prevStudents.map((student) =>
+                    student.student_id === editedStudent.student_id ? editedStudent : student
                 )
-                .map((student) => (
-                  <TableRow key={student.student_id}>
-                    <TableCell>{student.student_id}</TableCell>
-                    <TableCell>{student.name}</TableCell>
-                    <TableCell>{student.fee_status}</TableCell>
-                    <TableCell>{student.paid}</TableCell>
-                    <TableCell>{student.balance}</TableCell>
-                    <TableCell>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => handleStudentDelete(student.student_id)}
-                      >
-                        Delete
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={students.length}
-          rowsPerPage={studentRowsPerPage}
-          page={studentPage}
-          onPageChange={(event, newPage) => setStudentPage(newPage)}
-          onRowsPerPageChange={(event) => {
-            setStudentRowsPerPage(+event.target.value);
-            setStudentPage(0);
-          }}
-        />
-      </Paper>
+            );
+        } else {
+            throw new Error("Failed to save changes");
+        }
+    } catch (error) {
+        console.error("Error saving changes:", error.message);
+        alert("Failed to save changes. Please try again later.");
+    }
+};
+  
+  
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <div>
+        <h2>Teachers</h2>
+        <Paper style={{ width: "100%", overflow: "hidden" }}>
+          <TableContainer>
+            <Table stickyHeader aria-label="teacher table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Teacher ID</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Salary</TableCell>
+                  <TableCell>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {teachers
+                  .slice(
+                    teacherPage * teacherRowsPerPage,
+                    teacherPage * teacherRowsPerPage + teacherRowsPerPage
+                  )
+                  .map((teacher) => (
+                    <TableRow key={teacher.teacher_id}>
+                      <TableCell>{teacher.teacher_id}</TableCell>
+                      <TableCell>{teacher.teacher_name}</TableCell>
+                      <TableCell>{teacher.salary}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          sx={{ bgcolor: '#FF5722', color: '#fff', '&:hover': { bgcolor: '#FF7043' } }}
+                          startIcon={<DeleteIcon />}
+                          onClick={() => handleTeacherDelete(teacher.teacher_id)}
+                        >
+                          Delete
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 100]}
+            component="div"
+            count={teachers.length}
+            rowsPerPage={teacherRowsPerPage}
+            page={teacherPage}
+            onPageChange={(event, newPage) => setTeacherPage(newPage)}
+            onRowsPerPageChange={(event) => {
+              setTeacherRowsPerPage(+event.target.value);
+              setTeacherPage(0);
+            }}
+          />
+        </Paper>
+      </div>
+
+      <div>
+        <h2>Students</h2>
+        <Paper style={{ width: "90%", overflow: "hidden" }}>
+          <TableContainer>
+            <Table stickyHeader aria-label="student table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Student ID</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Fee Status</TableCell>
+                  <TableCell>Paid</TableCell>
+                  <TableCell>Balance</TableCell>
+                  <TableCell>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {students
+                  .slice(
+                    studentPage * studentRowsPerPage,
+                    studentPage * studentRowsPerPage + studentRowsPerPage
+                  )
+                  .map((student) => (
+                    <TableRow key={student.student_id}>
+                      <TableCell>{student.student_id}</TableCell>
+                      <TableCell>{student.name}</TableCell>
+                      <TableCell>{student.fee_status}</TableCell>
+                      <TableCell>{student.paid}</TableCell>
+                      <TableCell>{student.balance}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          sx={{ bgcolor: '#FF5722', color: '#fff', '&:hover': { bgcolor: '#FF7043' } }}
+                          startIcon={<DeleteIcon />}
+                          onClick={() => handleStudentDelete(student.student_id)}
+                        >
+                          Delete
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          startIcon={<EditIcon />}
+                          onClick={() => handleEdit(student)}
+                          style={{ marginLeft: "8px" }}
+                        >
+                          Edit
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 100]}
+            component="div"
+            count={students.length}
+            rowsPerPage={studentRowsPerPage}
+            page={studentPage}
+            onPageChange={(event, newPage) => setStudentPage(newPage)}
+            onRowsPerPageChange={(event) => {
+              setStudentRowsPerPage(+event.target.value);
+              setStudentPage(0);
+            }}
+          />
+        </Paper>
+      </div>
+
+      {/* Edit Student Dialog */}
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Edit Student</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Name"
+            fullWidth
+            value={editedStudent ? editedStudent.name : ""}
+            disabled
+          />
+          <TextField
+            margin="dense"
+            label="Fee Status"
+            fullWidth
+            value={editedStudent ? editedStudent.fee_status : ""}
+            onChange={(e) => setEditedStudent({...editedStudent, fee_status: e.target.value})}
+          />
+          <TextField
+            margin="dense"
+            label="Paid"
+            fullWidth
+            value={editedStudent ? editedStudent.paid : ""}
+            onChange={(e) => setEditedStudent({...editedStudent, paid: e.target.value})}
+          />
+          <TextField
+            margin="dense"
+            label="Balance"
+            fullWidth
+            value={editedStudent ? editedStudent.balance : ""}
+            onChange={(e) => setEditedStudent({...editedStudent, balance: e.target.value})}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleSaveChanges} color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
